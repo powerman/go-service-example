@@ -1,0 +1,32 @@
+#!/bin/bash
+
+### [version] [branch] revision[-dirty] build_date_time
+gitver() {
+	local ver branch rev dirty
+	ver="$(git tag -l --sort=-version:refname --merged HEAD 'v*' | head -n 1)"
+	branch="$(git rev-parse --abbrev-ref HEAD)"
+	rev="$(git log -1 --format='%h')"
+	git update-index -q --refresh --unmerged >/dev/null
+	git diff-index --quiet HEAD || dirty="-dirty"
+	test "$branch" = "HEAD" || test "$branch" = "master" && branch=
+
+	echo "${ver:+$ver }${branch:+$branch }$rev$dirty $(date -u +"%F_%T")"
+}
+ver="$(gitver)"
+
+set -x -e -o pipefail
+
+export GOFLAGS="-mod=readonly"
+export CGO_ENABLED=0
+
+rm -rf bin/
+mkdir bin/
+
+# Use `go build` (instead of `go install`) to build binaries for non-host
+# machine environment (like build on Mac OS for deployment into a linux-based
+# Docker container).
+for pkg in $(go list ./cmd/*); do
+	go build -o $PWD/bin/$(basename $pkg) \
+		-ldflags "-X 'main.ver=$ver'" \
+		"$@" $pkg
+done
