@@ -100,6 +100,7 @@ func init() {
       "type": "object",
       "properties": {
         "code": {
+          "description": "Either same as HTTP Status Code OR \u003e= 600 with HTTP Status Code 422",
           "type": "integer",
           "format": "int32"
         },
@@ -219,6 +220,7 @@ func init() {
       "type": "object",
       "properties": {
         "code": {
+          "description": "Either same as HTTP Status Code OR \u003e= 600 with HTTP Status Code 422",
           "type": "integer",
           "format": "int32"
         },

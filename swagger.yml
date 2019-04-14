@@ -54,11 +54,15 @@ responses:
             $ref: '#/definitions/Error'
 
 definitions:
-    # Same model as used by github.com/go-openapi/errors.Error.
+    # This model should match output of api.ServeError handler, to ensure
+    # errors returned by go-swagger (like failed validation) use same
+    # format as general errors returned by our handlers.
+    # By default api.ServeError = github.com/go-openapi/errors.ServeError.
     Error:
         type: object
         properties:
             code:
+                description: Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422
                 type: integer
                 format: int32
             message:

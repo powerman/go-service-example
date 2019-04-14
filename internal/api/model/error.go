@@ -15,7 +15,7 @@ import (
 // swagger:model Error
 type Error struct {
 
-	// code
+	// Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422
 	Code int32 `json:"code,omitempty"`
 
 	// message
