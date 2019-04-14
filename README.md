@@ -21,7 +21,7 @@ by go-swagger and "Use Cases" layer in package `app`.
 For using `--strict` swagger option you'll need to install a fork:
 
 ```
-git clone https://github.com/Djarvur/go-swagger && cd go-swagger && go install
+git clone https://github.com/Djarvur/go-swagger && cd go-swagger && go install ./cmd/swagger
 ```
 
 ## Usage
