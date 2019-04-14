@@ -79,9 +79,9 @@ Usage of ./bin/address-book:
   -version
     	print version
 $ ./bin/address-book -version
-address-book 6c4b4d5-dirty 2019-04-14_17:13:17 go1.12.3
+address-book v0.1.0 4c5dc1b 2019-04-14_17:16:29 go1.12.3
 $ ./bin/address-book
-address-book[7960] inf   main: `started` version 6c4b4d5-dirty 2019-04-14_17:13:17
-address-book[7960] inf   main: `protocol` version 0.1.0
-address-book[7960] inf   main: `Serving address book at http://127.0.0.1:8765`
+address-book[9854] inf   main: `started` version v0.1.0 4c5dc1b 2019-04-14_17:16:29
+address-book[9854] inf   main: `protocol` version 0.1.0
+address-book[9854] inf   main: `Serving address book at http://127.0.0.1:8765`
 ```
