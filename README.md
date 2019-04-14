@@ -3,9 +3,9 @@
 This project shows an example of how to use go-swagger accordingly to
 Uncle Bob's "Clean Architecture".
 
-Also it includes [json-schema-cheatsheet.yml](go-swagger JSON Schema
-support cheatsheet), which list all available validations/annotations for
-JSON body.
+Also it includes [go-swagger JSON Schema support
+cheatsheet](json-schema-cheatsheet.yml), which list all available
+validations/annotations for JSON body.
 
 ## Clean Architecture
 

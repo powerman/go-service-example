@@ -138,9 +138,9 @@ definitions:
                     key:
                         type: string
                 additionalProperties: true  # XXX false not working; don't work in Swagger Editor 3.22.1
-            #     # anyOf:
-            #     # oneOf:
-            #     # not:
+                # anyOf:
+                # oneOf:
+                # not:
             subClass1or2:
                 $ref: '#/definitions/BaseClass'
             formats:
