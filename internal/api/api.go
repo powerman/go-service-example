@@ -68,6 +68,6 @@ func Serve(log *structlog.Logger, application app.App, cfg Config) error {
 
 func fromRequest(r *http.Request, auth *app.Auth) (context.Context, *structlog.Logger) {
 	ctx := r.Context()
-	log := structlog.FromContext(ctx, nil).New(def.LogUser, auth.UserID)
+	log := structlog.FromContext(ctx, nil).SetDefaultKeyvals(def.LogUser, auth.UserID)
 	return ctx, log
 }

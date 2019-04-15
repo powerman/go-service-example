@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
 	"github.com/powerman/structlog"
@@ -63,15 +64,16 @@ func handleCORS(next http.Handler) http.Handler {
 
 func accesslog(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
 		ww := wrapResponseWriter(w)
 
 		next.ServeHTTP(ww, r)
 
 		log := structlog.FromContext(r.Context(), nil)
 		if code := ww.StatusCode(); code < 500 {
-			log.Info("request handled", def.LogHTTPStatus, code)
+			log.Info("handled", "in", time.Since(start), def.LogHTTPStatus, code)
 		} else {
-			log.PrintErr("failed to handle request", def.LogHTTPStatus, code)
+			log.PrintErr("failed to handle", "in", time.Since(start), def.LogHTTPStatus, code)
 		}
 	})
 }
