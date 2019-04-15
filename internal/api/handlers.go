@@ -6,8 +6,8 @@ import (
 )
 
 func (svc *service) getContacts(params op.GetContactsParams, auth *app.Auth) op.GetContactsResponder {
-	ctx := params.HTTPRequest.Context()
-	cs, err := svc.app.Contacts(ctx, svc.log, *auth)
+	ctx, log := fromRequest(params.HTTPRequest, auth)
+	cs, err := svc.app.Contacts(ctx, log, *auth)
 	if err != nil {
 		// TODO Maybe --strict should leave default response as middleware.Responder?
 		return defError(err, op.NewGetContactsDefault(0)).(op.GetContactsResponder)
@@ -16,9 +16,10 @@ func (svc *service) getContacts(params op.GetContactsParams, auth *app.Auth) op.
 }
 
 func (svc *service) postContacts(params op.PostContactsParams, auth *app.Auth) op.PostContactsResponder {
-	ctx := params.HTTPRequest.Context()
+	ctx, log := fromRequest(params.HTTPRequest, auth)
 	c := appContact(params.Contact)
-	err := svc.app.AddContact(ctx, svc.log, *auth, &c)
+	log.Debug("calling AddContact")
+	err := svc.app.AddContact(ctx, log, *auth, &c)
 	if err != nil {
 		return op.NewPostContactsDefault(500).WithPayload(apiError(err))
 	}

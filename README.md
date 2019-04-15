@@ -58,7 +58,7 @@ swagger generate server --exclude-main --regenerate-configureapi \
 - [X] CORS, so you can play with it using Swagger Editor tool.
 - [X] Easily testable code (as it should be with Clean Architecture).
 - [ ] Example tests.
-- [ ] Production logging.
+- [X] Production logging.
 - [ ] Production metrics using prometheus.
 
 ## Run

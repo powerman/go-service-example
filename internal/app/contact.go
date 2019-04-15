@@ -14,5 +14,6 @@ func (app *app) AddContact(ctx Ctx, log Log, auth Auth, c *Contact) error {
 	app.lastID++
 	c.ID = app.lastID
 	app.db = append(app.db, *c)
+	log.Debug("contact added")
 	return nil
 }

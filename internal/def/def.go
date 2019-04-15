@@ -16,12 +16,14 @@ import (
 
 // Log field names.
 const (
-	LogHost   = "host"
-	LogPort   = "port"
-	LogAddr   = "addr"
-	LogRemote = "remote" // aligned IPv4:Port "   192.168.0.42:1234 "
-	LogFunc   = "func"   // RPC method name, REST resource path
-	LogUser   = "userID"
+	LogHost       = "host"
+	LogPort       = "port"
+	LogAddr       = "addr"
+	LogRemote     = "remote" // aligned IPv4:Port "   192.168.0.42:1234 "
+	LogFunc       = "func"   // RPC method name, REST resource path
+	LogHTTPMethod = "httpMethod"
+	LogHTTPStatus = "httpStatus"
+	LogUser       = "userID"
 )
 
 // Default values.
@@ -41,6 +43,8 @@ func Init() {
 	structlog.DefaultLogger.
 		AppendPrefixKeys(
 			LogRemote,
+			LogHTTPStatus,
+			LogHTTPMethod,
 			LogFunc,
 		).
 		SetSuffixKeys(
@@ -53,6 +57,8 @@ func Init() {
 			LogPort:           ":%[2]v",
 			LogAddr:           " %[2]s",
 			LogRemote:         " %-21[2]s",
+			LogHTTPStatus:     " %3[2]v",
+			LogHTTPMethod:     " %-7[2]s",
 			LogFunc:           " %[2]s:",
 			LogUser:           " %[2]v",
 			"version":         " %s %v",

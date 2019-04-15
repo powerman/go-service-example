@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/go-openapi/loads"
@@ -8,8 +9,8 @@ import (
 	"github.com/powerman/go-service-goswagger-clean-example/internal/api/restapi"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/api/restapi/op"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
 	"github.com/powerman/structlog"
-	"github.com/rs/cors"
 )
 
 type service struct {
@@ -49,23 +50,24 @@ func Serve(log *structlog.Logger, application app.App, cfg Config) error {
 	server.Host = cfg.Host
 	server.Port = cfg.Port
 
-	server.SetHandler(setupGlobalMiddlewares(api.Serve(setupMiddlewares)))
+	// The middleware executes before anything.
+	globalMiddlewares := func(handler http.Handler) http.Handler {
+		logger := makeLogger(swaggerSpec.BasePath())
+		return logger(recovery(handleCORS(handler)))
+	}
+	// The middleware executes after serving /swagger.json and routing,
+	// but before authentication, binding and validation.
+	middlewares := func(handler http.Handler) http.Handler {
+		return accesslog(handler)
+	}
+	server.SetHandler(globalMiddlewares(api.Serve(middlewares)))
 
 	log.Info("protocol", "version", swaggerSpec.Spec().Info.Version)
 	return server.Serve()
 }
 
-// The middleware configuration happens before anything.
-// This middleware also applies to serving the swagger.json document.
-// So this is a good place to plug in a panic handling middleware, logging and metrics.
-func setupGlobalMiddlewares(handler http.Handler) http.Handler {
-	handleCORS := cors.AllowAll().Handler
-	return handleCORS(handler)
-}
-
-// The middleware configuration is for the handler executors.
-// These do not apply to the swagger.json document.
-// The middleware executes after routing but before authentication, binding and validation.
-func setupMiddlewares(handler http.Handler) http.Handler {
-	return handler
+func fromRequest(r *http.Request, auth *app.Auth) (context.Context, *structlog.Logger) {
+	ctx := r.Context()
+	log := structlog.FromContext(ctx, nil).New(def.LogUser, auth.UserID)
+	return ctx, log
 }
