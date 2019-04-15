@@ -81,7 +81,21 @@ Usage of ./bin/address-book:
 $ ./bin/address-book -version
 address-book v0.1.0 4c5dc1b 2019-04-14_17:16:29 go1.12.3
 $ ./bin/address-book
-address-book[9854] inf   main: `started` version v0.1.0 4c5dc1b 2019-04-14_17:16:29
-address-book[9854] inf   main: `protocol` version 0.1.0
-address-book[9854] inf   main: `Serving address book at http://127.0.0.1:8765`
+address-book[765] inf   main: `started` version v0.1.0 44adc55 2019-04-15_02:22:54
+address-book[765] inf   main: `protocol` version 0.1.0
+address-book[765] inf   main: `Serving address book at http://127.0.0.1:8765`
+address-book[765] dbg    api: 127.0.0.1:56636           POST    /contacts: `calling AddContact` admin
+address-book[765] dbg    app: 127.0.0.1:56636           POST    /contacts: `contact added` admin
+address-book[765] inf    api: 127.0.0.1:56636       201 POST    /contacts: `handled` in=162.828µs admin
+address-book[765] dbg    api: 127.0.0.1:56648           POST    /contacts: `calling AddContact` admin
+address-book[765] dbg    app: 127.0.0.1:56648           POST    /contacts: `contact added` admin
+address-book[765] inf    api: 127.0.0.1:56648       201 POST    /contacts: `handled` in=107.567µs admin
+address-book[765] dbg    api: 127.0.0.1:56652           POST    /contacts: `calling AddContact` admin
+address-book[765] dbg    app: 127.0.0.1:56652           POST    /contacts: `contact added` admin
+address-book[765] inf    api: 127.0.0.1:56652       201 POST    /contacts: `handled` in=172.17µs admin
+address-book[765] inf    api: 127.0.0.1:56656       200 GET     /contacts: `handled` in=71.346µs admin
+address-book[765] inf    api: 127.0.0.1:56744       401 GET     /contacts: `handled` in=96.454µs
+address-book[765] inf    api: 127.0.0.1:56750       401 POST    /contacts: `handled` in=34.59µs
+address-book[765] inf    api: 127.0.0.1:56828       200 GET     /contacts: `handled` in=49.659µs someuser
+address-book[765] inf    api: 127.0.0.1:56832       403 POST    /contacts: `handled` in=36.359µs
 ```
