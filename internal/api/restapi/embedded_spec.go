@@ -30,7 +30,7 @@ func init() {
   "swagger": "2.0",
   "info": {
     "title": "Address Book",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "host": "localhost:8765",
   "paths": {
@@ -98,6 +98,10 @@ func init() {
     },
     "Error": {
       "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
       "properties": {
         "code": {
           "description": "Either same as HTTP Status Code OR \u003e= 600 with HTTP Status Code 422",
@@ -144,7 +148,7 @@ func init() {
   "swagger": "2.0",
   "info": {
     "title": "Address Book",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "host": "localhost:8765",
   "paths": {
@@ -218,6 +222,10 @@ func init() {
     },
     "Error": {
       "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
       "properties": {
         "code": {
           "description": "Either same as HTTP Status Code OR \u003e= 600 with HTTP Status Code 422",

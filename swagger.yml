@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
     title: Address Book
-    version: 0.1.0
+    version: 0.1.1
 consumes:
     - application/json
 produces:
@@ -60,6 +60,9 @@ definitions:
     # By default api.ServeError = github.com/go-openapi/errors.ServeError.
     Error:
         type: object
+        required:
+            - code
+            - message
         properties:
             code:
                 description: Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422

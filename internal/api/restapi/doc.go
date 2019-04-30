@@ -7,7 +7,7 @@ Package restapi Address Book
       http
     Host: localhost:8765
     BasePath: /
-    Version: 0.1.0
+    Version: 0.1.1
 
     Consumes:
     - application/json
