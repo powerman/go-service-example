@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
     title: go-swagger JSON Schema support cheatsheet
-    version: 1.0.0
+    version: 1.1.0
 consumes:
     - application/json
 produces:
@@ -66,7 +66,7 @@ definitions:
             # PI:
             #     const: 3.14             # draft-06
             # color:
-            #     enum: ["RED","GREEN","BLUE"]
+            #     enum: ["RED", "GREEN", "BLUE"]
             # nothing:
             #     type: null              # not in Swagger 2.0, replace with x-nullable:
             flag:
@@ -80,6 +80,7 @@ definitions:
                 maxLength: 10
                 minLength: 3
                 pattern: '^go.regexp$'  # XXX instead of ECMA 262 '^abc[abc-z][^a-z]a?a+a*a??a+?a*?a{3}a{1,3}a{3,}a{1,3}?a{3,}?(a|b)$'
+                enum: ["ONE", "TWO"]
             count:
                 type: integer
                 minimum: 1
@@ -87,6 +88,7 @@ definitions:
                 maximum: 10
                 exclusiveMaximum: true  # draft-06: change type to number instead of bool
                 multipleOf: 2
+                enum: [10, 20]
             price:
                 type: number
                 minimum: 1.23
@@ -94,6 +96,7 @@ definitions:
                 maximum: 3.14
                 exclusiveMaximum: true  # draft-06: change type to number instead of bool
                 multipleOf: 2
+                enum: [1.1, 2.2]
             list_of_same_type:
                 type: array
                 minItems: 1
@@ -101,6 +104,7 @@ definitions:
                 uniqueItems: true
                 items:
                     type: string
+                enum: [["abc", "xyz"], ["123", "789"]]
                 # contains:
             list:
                 type: array
@@ -114,11 +118,13 @@ definitions:
                 # contains:             # draft-06
                 additionalItems:        # XXX require --skip-validation
                     - type: integer
+                enum: [["one", 1, 10], ["two", 2.2, 20.2, 22]]
             list_printf_args:
                 type: array
                 items:                  # don't work in Swagger Editor 3.22.1
                     - type: string
                 additionalItems: true   # XXX require --skip-validation, false not working
+                enum: [["one"], ["two", 1, 2.2, "last"]]
             map:
                 type: object
                 # minProperties: 2
@@ -133,6 +139,7 @@ definitions:
                         type: string
                 additionalProperties:   # everything not listed in properties or patternProperties
                     type: string
+                enum: [{"key":""}, {"key":"one", "name":"two"}]
                 # patternProperties:
                 # dependencies:
                 # propertyNames:        # draft-06
@@ -145,6 +152,7 @@ definitions:
                     key:
                         type: string
                 additionalProperties: true  # XXX false not working; don't work in Swagger Editor 3.22.1
+                enum: [{}, {"key":"one", "extra":"two"}]
                 # anyOf:
                 # oneOf:
                 # not:
