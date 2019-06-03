@@ -4,8 +4,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"path"
+	"regexp"
 	"runtime"
 	"strings"
 
@@ -14,12 +16,20 @@ import (
 	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/flags"
 	"github.com/powerman/structlog"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 //nolint:gochecknoglobals
 var (
+	// set by ./build
+	gitVersion  string
+	gitBranch   string
+	gitRevision string
+	gitDate     string
+	buildDate   string
+
 	cmd = strings.TrimSuffix(path.Base(os.Args[0]), ".test")
-	ver string // set by ./build
+	ver = strings.Join(strings.Fields(strings.Join([]string{gitVersion, gitBranch, gitRevision, buildDate}, " ")), " ")
 	log = structlog.New()
 	cfg struct {
 		version  bool
@@ -40,6 +50,11 @@ func Init() {
 	log.SetDefaultKeyvals(
 		structlog.KeyUnit, "main",
 	)
+
+	namespace := regexp.MustCompile(`[^a-zA-Z0-9]+`).ReplaceAllString(cmd, "_")
+	InitMetrics(namespace)
+	def.InitMetrics()
+	api.InitMetrics(namespace)
 }
 
 func main() {
@@ -59,6 +74,9 @@ func main() {
 	// Wrong log.level is not fatal, it will be reported and set to "debug".
 	structlog.DefaultLogger.SetLogLevel(structlog.ParseLevel(cfg.logLevel))
 	log.Info("started", "version", ver)
+
+	http.Handle("/metrics", promhttp.Handler())
+	go func() { log.Fatal(http.ListenAndServe(cfg.api.Host+":8080", nil)) }()
 
 	a := app.New()
 	err := api.Serve(log, a, cfg.api)

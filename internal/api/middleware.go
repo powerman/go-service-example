@@ -3,12 +3,13 @@ package api
 import (
 	"net"
 	"net/http"
-	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
 	"github.com/powerman/structlog"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/cors"
 	"github.com/sebest/xff"
 )
@@ -44,13 +45,15 @@ func recovery(next http.Handler) http.Handler {
 		defer func() {
 			switch err := recover(); err := err.(type) {
 			default:
+				def.Metric.PanicsTotal.Inc()
 				log := structlog.FromContext(r.Context(), nil)
 				log.PrintErr(err, structlog.KeyStack, structlog.Auto)
-				os.Exit(2)
+				w.WriteHeader(http.StatusInternalServerError)
 			case nil:
 			case net.Error:
 				log := structlog.FromContext(r.Context(), nil)
 				log.PrintErr(err)
+				w.WriteHeader(http.StatusInternalServerError)
 			}
 		}()
 
@@ -62,18 +65,33 @@ func handleCORS(next http.Handler) http.Handler {
 	return cors.AllowAll().Handler(next)
 }
 
-func accesslog(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		start := time.Now()
-		ww := wrapResponseWriter(w)
+func makeAccessLog(basePath string) middlewareFunc {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			metric.reqInFlight.Inc()
+			defer metric.reqInFlight.Dec()
 
-		next.ServeHTTP(ww, r)
+			start := time.Now()
+			ww := wrapResponseWriter(w)
 
-		log := structlog.FromContext(r.Context(), nil)
-		if code := ww.StatusCode(); code < 500 {
-			log.Info("handled", "in", time.Since(start), def.LogHTTPStatus, code)
-		} else {
-			log.PrintErr("failed to handle", "in", time.Since(start), def.LogHTTPStatus, code)
-		}
-	})
+			next.ServeHTTP(ww, r)
+
+			code := ww.StatusCode()
+
+			l := prometheus.Labels{
+				resourceLabel: strings.TrimPrefix(r.URL.Path, basePath),
+				methodLabel:   r.Method,
+				codeLabel:     strconv.Itoa(code),
+			}
+			metric.reqTotal.With(l).Inc()
+			metric.reqDuration.With(l).Observe(time.Since(start).Seconds())
+
+			log := structlog.FromContext(r.Context(), nil)
+			if code < 500 {
+				log.Info("handled", def.LogHTTPStatus, code)
+			} else {
+				log.PrintErr("failed to handle", def.LogHTTPStatus, code)
+			}
+		})
+	}
 }

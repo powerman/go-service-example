@@ -18,6 +18,7 @@ require (
 	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
 	github.com/powerman/must v0.1.0
 	github.com/powerman/structlog v0.3.0
+	github.com/prometheus/client_golang v0.9.3
 	github.com/rs/cors v1.6.0
 	github.com/sebest/xff v0.0.0-20160910043805-6c115e0ffa35
 	github.com/smartystreets/assertions v0.0.0-20190401211740-f487f9de1cd3 // indirect

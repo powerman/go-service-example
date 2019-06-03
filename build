@@ -1,18 +1,14 @@
 #!/bin/bash
 
-### [version] [branch] revision[-dirty] build_date_time
-gitver() {
-	local ver branch rev dirty
-	ver="$(git tag -l --sort=-version:refname --merged HEAD 'v*' | head -n 1)"
-	branch="$(git rev-parse --abbrev-ref HEAD)"
-	rev="$(git log -1 --format='%h')"
-	git update-index -q --refresh --unmerged >/dev/null
-	git diff-index --quiet HEAD || dirty="-dirty"
-	test "$branch" = "HEAD" || test "$branch" = "master" && branch=
-
-	echo "${ver:+$ver }${branch:+$branch }$rev$dirty $(date -u +"%F_%T")"
-}
-ver="$(gitver)"
+gitVersion="$(git tag -l --sort=-version:refname --merged HEAD 'v*' | head -n 1)"
+gitBranch="$(git rev-parse --abbrev-ref HEAD)"
+test "$gitBranch" = "HEAD" && gitBranch="$CIRCLE_BRANCH"
+test "$gitBranch" = "master" && gitBranch=
+gitRevision="$(git log -1 --format='%h')"
+git update-index -q --refresh --unmerged >/dev/null
+git diff-index --quiet HEAD || gitRevision="${gitRevision}-dirty"
+gitDate="$(date -u +"%F_%T" --date="@$(git log -1 --format='%ad' --date=unix)")"
+buildDate="$(date -u +"%F_%T")"
 
 set -x -e -o pipefail
 
@@ -27,6 +23,12 @@ mkdir bin/
 # Docker container).
 for pkg in $(go list ./cmd/*); do
 	go build -o $PWD/bin/$(basename $pkg) \
-		-ldflags "-X 'main.ver=$ver'" \
+		-ldflags "
+			-X 'main.gitVersion=$gitVersion'
+			-X 'main.gitBranch=$gitBranch'
+			-X 'main.gitRevision=$gitRevision'
+			-X 'main.gitDate=$gitDate'
+			-X 'main.buildDate=$buildDate'
+		" \
 		"$@" $pkg
 done

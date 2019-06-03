@@ -58,6 +58,7 @@ func Serve(log *structlog.Logger, application app.App, cfg Config) error {
 	// The middleware executes after serving /swagger.json and routing,
 	// but before authentication, binding and validation.
 	middlewares := func(handler http.Handler) http.Handler {
+		accesslog := makeAccessLog(swaggerSpec.BasePath())
 		return accesslog(handler)
 	}
 	server.SetHandler(globalMiddlewares(api.Serve(middlewares)))
