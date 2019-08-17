@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/go-openapi/analysis v0.19.0 // indirect
-	github.com/go-openapi/errors v0.19.0
+	github.com/go-openapi/errors v0.19.2
 	github.com/go-openapi/jsonpointer v0.19.0 // indirect
 	github.com/go-openapi/jsonreference v0.19.0 // indirect
 	github.com/go-openapi/loads v0.19.0
