@@ -19,7 +19,7 @@ require (
 	github.com/powerman/must v0.1.0
 	github.com/powerman/structlog v0.5.0
 	github.com/prometheus/client_golang v0.9.3
-	github.com/rs/cors v1.6.0
+	github.com/rs/cors v1.7.0
 	github.com/sebest/xff v0.0.0-20160910043805-6c115e0ffa35
 	github.com/smartystreets/assertions v0.0.0-20190401211740-f487f9de1cd3 // indirect
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
