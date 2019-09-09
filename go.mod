@@ -12,7 +12,7 @@ require (
 	github.com/go-openapi/spec v0.19.0
 	github.com/go-openapi/strfmt v0.19.2
 	github.com/go-openapi/swag v0.19.0
-	github.com/go-openapi/validate v0.19.2
+	github.com/go-openapi/validate v0.19.3
 	github.com/gopherjs/gopherjs v0.0.0-20190411002643-bd77b112433e // indirect
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
