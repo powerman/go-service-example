@@ -1,3 +1,4 @@
+// Package api provides swagger API.
 package api
 
 import (

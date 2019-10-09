@@ -1,3 +1,4 @@
+// Package app provides business logic.
 package app
 
 import (
