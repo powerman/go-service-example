@@ -9,7 +9,6 @@ func (svc *service) getContacts(params op.GetContactsParams, auth *app.Auth) op.
 	ctx, log := fromRequest(params.HTTPRequest, auth)
 	cs, err := svc.app.Contacts(ctx, log, *auth)
 	if err != nil {
-		// TODO Maybe --strict should leave default response as middleware.Responder?
 		return defError(err, op.NewGetContactsDefault(0)).(op.GetContactsResponder)
 	}
 	return op.NewGetContactsOK().WithPayload(apiContacts(cs))

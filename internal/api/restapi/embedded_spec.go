@@ -131,7 +131,7 @@ func init() {
   },
   "security": [
     {
-      "api_key": null
+      "api_key": []
     }
   ]
 }`))
