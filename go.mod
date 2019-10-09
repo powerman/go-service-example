@@ -1,6 +1,6 @@
 module github.com/powerman/go-service-goswagger-clean-example
 
-go 1.12
+go 1.13
 
 require (
 	github.com/go-openapi/errors v0.19.2
@@ -20,7 +20,6 @@ require (
 	github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4 // indirect
 	github.com/prometheus/common v0.7.0 // indirect
 	github.com/prometheus/procfs v0.0.5 // indirect
-	github.com/prometheus/tsdb v0.7.1 // indirect
 	github.com/rs/cors v1.7.0
 	github.com/sebest/xff v0.0.0-20160910043805-6c115e0ffa35
 	github.com/smartystreets/assertions v0.0.0-20190401211740-f487f9de1cd3 // indirect
