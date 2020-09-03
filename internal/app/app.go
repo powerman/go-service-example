@@ -1,35 +1,61 @@
+//go:generate mockgen -package=$GOPACKAGE -source=$GOFILE -destination=mock.$GOFILE Appl,Repo
+
 // Package app provides business logic.
 package app
 
 import (
 	"context"
-
-	"github.com/powerman/structlog"
+	"errors"
 )
 
 // Ctx is a synonym for convenience.
 type Ctx = context.Context
 
-// Log is a synonym for convenience.
-type Log = *structlog.Logger
+// Errors.
+var (
+	ErrContactExists = errors.New("contact already exists")
+)
 
-// Auth describes authentication.
-type Auth struct {
-	UserID string
+// Appl provides application features (use cases) service.
+type Appl interface {
+	// Contacts returns all contacts.
+	// Errors: none.
+	Contacts(Ctx, Auth) ([]Contact, error)
+	// AddContact adds new contact.
+	// Errors: ErrContactExists.
+	AddContact(_ Ctx, _ Auth, name string) (*Contact, error)
 }
 
-// App provides application features service.
-type App interface {
-	Contacts(Ctx, Log, Auth) ([]Contact, error)
-	AddContact(Ctx, Log, Auth, *Contact) error
+// Repo provides data storage.
+type Repo interface {
+	// Contacts returns all contacts.
+	// Errors: none.
+	Contacts(Ctx) ([]Contact, error)
+	// AddContact adds new contact and set ID.
+	// Errors: ErrContactExists.
+	AddContact(Ctx, *Contact) error
 }
 
-type app struct {
-	lastID int
-	db     []Contact
+type (
+	// Auth describes authentication.
+	Auth struct {
+		UserID string
+	}
+	// Contact describes record in address book.
+	Contact struct {
+		ID   int
+		Name string
+	}
+)
+
+// App implements interface Appl.
+type App struct {
+	repo Repo
 }
 
-// New return new application.
-func New() App {
-	return &app{}
+func New(repo Repo) *App {
+	a := &App{
+		repo: repo,
+	}
+	return a
 }

@@ -1,86 +1,89 @@
-// Example swagger service.
+// Example microservice.
 package main
 
 import (
-	"flag"
+	"context"
 	"fmt"
-	"net/http"
 	"os"
-	"path"
-	"regexp"
+	"os/signal"
 	"runtime"
-	"strings"
+	"syscall"
+	"time"
 
-	"github.com/powerman/go-service-goswagger-clean-example/internal/api"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/appcfg"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/flags"
+	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/cobrax"
 	"github.com/powerman/structlog"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/spf13/cobra"
 )
 
-//nolint:gochecknoglobals
+//nolint:gochecknoglobals // Main.
 var (
-	// set by ./build
-	gitVersion  string
-	gitBranch   string
-	gitRevision string
-	gitDate     string
-	buildDate   string
+	log = structlog.New(structlog.KeyUnit, "main")
 
-	cmd = strings.TrimSuffix(path.Base(os.Args[0]), ".test")
-	ver = strings.Join(strings.Fields(strings.Join([]string{gitVersion, gitBranch, gitRevision, buildDate}, " ")), " ")
-	log = structlog.New()
-	cfg struct {
-		version  bool
-		logLevel string
-		api      api.Config
+	svc = &service{}
+
+	logLevel = appcfg.MustOneOfString("debug", []string{"debug", "info", "warn", "err"})
+	rootCmd  = &cobra.Command{
+		Use:           def.ProgName,
+		Short:         "Example microservice with OpenAPI",
+		Version:       fmt.Sprintf("%s %s", def.Version(), runtime.Version()),
+		SilenceErrors: true,
+		SilenceUsage:  true,
+		RunE:          cobrax.RequireFlagOrCommand,
+	}
+
+	serveStartupTimeout  = appcfg.MustDuration("3s") // must be less than swarm's deploy.update_config.monitor
+	serveShutdownTimeout = appcfg.MustDuration("9s") // `docker stop` use 10s between SIGTERM and SIGKILL
+	serveCmd             = &cobra.Command{
+		Use:   "serve",
+		Short: "Starts microservice",
+		Args:  cobra.NoArgs,
+		RunE:  runServeWithGracefulShutdown,
 	}
 )
-
-// Init provides common initialization for both app and tests.
-func Init() {
-	def.Init()
-
-	flag.BoolVar(&cfg.version, "version", false, "print version")
-	flag.StringVar(&cfg.logLevel, "log.level", "debug", "log `level` (debug|info|warn|err)")
-	flag.StringVar(&cfg.api.Host, "host", def.Host, "listen on `host`")
-	flag.IntVar(&cfg.api.Port, "port", def.Port, "listen on `port` (>0)")
-
-	log.SetDefaultKeyvals(
-		structlog.KeyUnit, "main",
-	)
-
-	namespace := regexp.MustCompile(`[^a-zA-Z0-9]+`).ReplaceAllString(cmd, "_")
-	InitMetrics(namespace)
-	def.InitMetrics()
-	api.InitMetrics(namespace)
-}
 
 func main() {
-	Init()
-	flag.Parse()
-
-	switch {
-	case cfg.api.Host == "":
-		flags.FatalFlagValue("required", "host", cfg.api.Host)
-	case cfg.api.Port <= 0: // Free nginx doesn't support dynamic ports.
-		flags.FatalFlagValue("must be > 0", "port", cfg.api.Port)
-	case cfg.version: // Must be checked after all other flags for ease testing.
-		fmt.Println(cmd, ver, runtime.Version())
-		os.Exit(0)
+	err := def.Init()
+	if err != nil {
+		log.Fatalln("failed to get defaults:", err)
 	}
 
-	// Wrong log.level is not fatal, it will be reported and set to "debug".
-	structlog.DefaultLogger.SetLogLevel(structlog.ParseLevel(cfg.logLevel))
-	log.Info("started", "version", ver)
+	err = initService(rootCmd, serveCmd)
+	if err != nil {
+		log.Fatalln("failed to init service:", err)
+	}
 
-	http.Handle("/metrics", promhttp.Handler())
-	go func() { log.Fatal(http.ListenAndServe(cfg.api.Host+":8080", nil)) }()
+	rootCmd.PersistentFlags().Var(&logLevel, "log.level", "log level [debug|info|warn|err]")
+	serveCmd.Flags().Var(&serveStartupTimeout, "timeout.startup", "must be less than swarm's deploy.update_config.monitor")
+	serveCmd.Flags().Var(&serveShutdownTimeout, "timeout.shutdown", "must be less than 10s used by 'docker stop' between SIGTERM and SIGKILL")
+	rootCmd.AddCommand(serveCmd)
 
-	a := app.New()
-	err := api.Serve(log, a, cfg.api)
+	cobra.OnInitialize(func() {
+		structlog.DefaultLogger.SetLogLevel(structlog.ParseLevel(logLevel.String()))
+	})
+	err = rootCmd.Execute()
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func runServeWithGracefulShutdown(_ *cobra.Command, _ []string) error {
+	log.Info("started", "version", def.Version())
+	defer log.Info("finished", "version", def.Version())
+
+	ctxStartup, cancel := context.WithTimeout(context.Background(), serveStartupTimeout.Value(nil))
+	defer cancel()
+
+	ctxShutdown, shutdown := context.WithCancel(context.Background())
+	sigc := make(chan os.Signal, 1)
+	signal.Notify(sigc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGABRT, syscall.SIGTERM)
+	go func() { <-sigc; shutdown() }()
+	go func() {
+		<-ctxShutdown.Done()
+		time.Sleep(serveShutdownTimeout.Value(nil))
+		log.Fatalln("failed to graceful shutdown", "version", def.Version())
+	}()
+
+	return svc.runServe(ctxStartup, ctxShutdown, shutdown)
 }

@@ -1,0 +1,6 @@
+#!/bin/bash
+set -x -e -o pipefail
+
+golangci-lint run
+
+gotestsum -- -race -tags=integration ./...

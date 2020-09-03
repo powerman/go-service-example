@@ -3,26 +3,26 @@ package main
 import (
 	"runtime"
 
+	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
 )
 
-// InitMetrics must be called once before using this package.
-// It registers and initializes metrics used by this package.
-func InitMetrics(namespace string) {
-	promauto.NewGaugeVec(
+func initMetrics(reg *prometheus.Registry, namespace string) {
+	reg.MustRegister(prometheus.NewProcessCollector(prometheus.ProcessCollectorOpts{}))
+	reg.MustRegister(prometheus.NewGoCollector())
+
+	version := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Namespace: namespace,
 			Name:      "build_info",
 			Help:      "A metric with a constant '1' value labeled by build-time details.",
 		},
-		[]string{"version", "branch", "revision", "date", "build_date", "goversion"},
-	).With(prometheus.Labels{
-		"version":    gitVersion,
-		"branch":     gitBranch,
-		"revision":   gitRevision,
-		"date":       gitDate,
-		"build_date": buildDate,
-		"goversion":  runtime.Version(),
+		[]string{"version", "goversion"},
+	)
+	reg.MustRegister(version)
+
+	version.With(prometheus.Labels{
+		"version":   def.Version(),
+		"goversion": runtime.Version(),
 	}).Set(1)
 }

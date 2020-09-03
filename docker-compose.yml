@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+
+    address-book:
+        build:
+            context: .
+            dockerfile: use `./scripts/build` instead of `docker-compose build`
+        image: "go-service-goswagger-clean-example:latest"
+        container_name: example_address-book
+        restart: always
+        ports:
+            - "${EXAMPLE_ADDR_PORT:-0}:8000"
+            - "${EXAMPLE_METRICS_ADDR_PORT:-0}:9000"

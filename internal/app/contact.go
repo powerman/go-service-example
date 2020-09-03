@@ -1,19 +1,16 @@
 package app
 
-// Contact describes record in address book.
-type Contact struct {
-	ID   int
-	Name string
+func (a *App) Contacts(ctx Ctx, auth Auth) ([]Contact, error) {
+	return a.repo.Contacts(ctx)
 }
 
-func (app *app) Contacts(ctx Ctx, log Log, auth Auth) ([]Contact, error) {
-	return app.db, nil
-}
-
-func (app *app) AddContact(ctx Ctx, log Log, auth Auth, c *Contact) error {
-	app.lastID++
-	c.ID = app.lastID
-	app.db = append(app.db, *c)
-	log.Debug("contact added")
-	return nil
+func (a *App) AddContact(ctx Ctx, auth Auth, name string) (*Contact, error) {
+	c := &Contact{
+		Name: name,
+	}
+	err := a.repo.AddContact(ctx, c)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
 }

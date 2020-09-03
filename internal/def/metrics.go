@@ -2,21 +2,30 @@ package def
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promauto"
 )
 
-// Metric provides access to global metrics used by all packages.
-var Metric struct {
-	PanicsTotal prometheus.Counter
+// Metrics provides common metrics used by all packages.
+type Metrics struct {
+	PanicsTotal           prometheus.Counter
+	MisconfigurationTotal prometheus.Counter
 }
 
-// InitMetrics must be called once before using this package.
-// It registers and initializes metrics used by this package.
-func InitMetrics() {
-	Metric.PanicsTotal = promauto.NewCounter(
+// NewMetrics registers and returns common metrics used by all packages.
+func NewMetrics(reg *prometheus.Registry) Metrics {
+	var metrics Metrics
+	metrics.PanicsTotal = prometheus.NewCounter(
 		prometheus.CounterOpts{
 			Name: "panics_total",
 			Help: "Amount of recovered panics.",
 		},
 	)
+	reg.MustRegister(metrics.PanicsTotal)
+	metrics.MisconfigurationTotal = prometheus.NewCounter(
+		prometheus.CounterOpts{
+			Name: "misconfiguration_total",
+			Help: "Amount of failures because of incorrect configuration.",
+		},
+	)
+	reg.MustRegister(metrics.MisconfigurationTotal)
+	return metrics
 }

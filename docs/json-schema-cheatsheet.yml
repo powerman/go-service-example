@@ -1,0 +1,320 @@
+swagger: "2.0"
+info:
+  title: go-swagger JSON Schema support cheatsheet
+  version: 1.1.0
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - https
+host: localhost
+paths:
+  /v0.19.0/json-schema:
+    post:
+      summary: JSON Schema support
+      parameters:
+        - name: cheatsheet
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/JSONSchema-v0.19.0'
+      responses:
+        default: {$ref: '#/responses/Error'}
+
+responses:
+  # Return general errors using same model as used by go-swagger for validation errors.
+  Error:
+    description: Error
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+  # This model should match output of api.ServeError handler, to ensure
+  # errors returned by go-swagger (like failed validation) use same
+  # format as general errors returned by our handlers.
+  # By default api.ServeError = github.com/go-openapi/errors.ServeError.
+  Error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        description: Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422
+        type: integer
+        format: int32
+      message:
+        type: string
+
+  ### List of all available validations/annotations.
+  #
+  # x-go-name: "string"           # give explicit type name to the generated model
+  # x-go-custom-tag: "string"     # add serialization tags to an object property
+  # x-nullable: true|false        # accepts null values (i.e. rendered as a pointer)
+  # x-is-nullable: true|false     # same as x-nullable
+  # x-go-type: "string"           # explicitly reuse an already available go type
+  # x-class: "string"             # give explicit polymorphic class name in discriminator
+  # x-order: number               # indicates explicit generation ordering for schemas (e.g. models, properties, allOf, ...)
+  #
+  # While validating body with JSON only listed below and NOT COMMENTED
+  # keywords actually works. Keywords commented XXX works partially.
+  JSONSchema-v0.19.0:
+    type: object
+    properties:
+      # PI:
+      #   const: 3.14             # draft-06
+      # color:
+      #   enum: ["RED", "GREEN", "BLUE"]
+      # nothing:
+      #   type: null              # not in Swagger 2.0, replace with x-nullable:
+      flag:
+        type: boolean
+      # flag_or_list:
+      #   type:
+      #     - boolean
+      #     - array
+      name:
+        type: string
+        maxLength: 10
+        minLength: 3
+        pattern: '^go.regexp$'  # XXX instead of ECMA 262 '^abc[abc-z][^a-z]a?a+a*a??a+?a*?a{3}a{1,3}a{3,}a{1,3}?a{3,}?(a|b)$'
+        enum: ["ONE", "TWO"]
+      count:
+        type: integer
+        minimum: 1
+        exclusiveMinimum: true  # draft-06: change type to number instead of bool
+        maximum: 10
+        exclusiveMaximum: true  # draft-06: change type to number instead of bool
+        multipleOf: 2
+        enum: [10, 20]
+      price:
+        type: number
+        minimum: 1.23
+        exclusiveMinimum: true  # draft-06: change type to number instead of bool
+        maximum: 3.14
+        exclusiveMaximum: true  # draft-06: change type to number instead of bool
+        multipleOf: 2
+        enum: [1.1, 2.2]
+      list_of_same_type:
+        type: array
+        minItems: 1
+        maxItems: 5
+        uniqueItems: true
+        items:
+          type: string
+        enum: [["abc", "xyz"], ["123", "789"]]
+        # contains:
+      list:
+        type: array
+        # minItems: 1
+        # maxItems: 5
+        # uniqueItems: true
+        items:                  # don't work in Swagger Editor 3.22.1
+          - type: string      # XXX incomplete tuples and tuples with array validation are not properly validated
+          - type: number
+          - type: number
+        # contains:             # draft-06
+        additionalItems:        # XXX require --skip-validation
+          - type: integer
+        enum: [["one", 1, 10], ["two", 2.2, 20.2, 22]]
+      list_printf_args:
+        type: array
+        items:                  # don't work in Swagger Editor 3.22.1
+          - type: string
+        additionalItems: true   # XXX require --skip-validation, false not working
+        enum: [["one"], ["two", 1, 2.2, "last"]]
+      map:
+        type: object
+        # minProperties: 2
+        # maxProperties: 10
+        required:               # keys must exists, but may have empty values
+          - key
+          # - additional_key
+        properties:
+          name:
+            type: string
+          key:
+            type: string
+        additionalProperties:   # everything not listed in properties or patternProperties
+          type: string
+        enum: [{"key":""}, {"key":"one", "name":"two"}]
+        # patternProperties:
+        # dependencies:
+        # propertyNames:        # draft-06
+        # if:                   # draft-07
+        # then:                 # draft-07
+        # else:                 # draft-07
+      map2:
+        type: object
+        properties:
+          key:
+            type: string
+        additionalProperties: true  # XXX false not working; don't work in Swagger Editor 3.22.1
+        enum: [{}, {"key":"one", "extra":"two"}]
+        # anyOf:
+        # oneOf:
+        # not:
+      subClass1or2:
+        $ref: '#/definitions/BaseClass'
+      formats:
+        type: object
+        properties:
+          num1:
+            type: integer
+            format: int32
+          num1u:
+            type: integer
+            format: uint32
+          num2:
+            type: integer
+            format: int64
+          num2u:
+            type: integer
+            format: uint64
+          num3:
+            type: number
+            format: float
+          num4:
+            type: number
+            format: double
+          bin1:
+            type: string
+            format: byte                    # base64-encoded string
+          bin2:
+            type: string
+            format: binary                  # octets
+          key0:
+            type: string
+            format: password
+          key1:
+            type: string
+            format: date-time               # 2006-01-02T15:04:05Z
+          key2:
+            type: string
+            format: date                    # 2006-01-02
+          # key3:
+          #   type: string
+          #   format: time                    # draft-07, 15:04:05Z07:00
+          key4:
+            type: string
+            format: email
+          # key4idn:
+          #   type: string
+          #   format: idn-email               # draft-07
+          key5:
+            type: string
+            format: hostname
+          # key5idn:
+          #   type: string
+          #   format: idn-hostname            # draft-07
+          key6:
+            type: string
+            format: ipv4
+          key7:
+            type: string
+            format: ipv6
+          key8:
+            type: string
+            format: uri
+          # key8ref:
+          #   type: string
+          #   format: uri-reference           # draft-06
+          # key8i:
+          #   type: string
+          #   format: iri                     # draft-07
+          # key8iref:
+          #   type: string
+          #   format: iri-reference           # draft-07
+          # key9:
+          #   type: string
+          #   format: uri-template            # draft-06
+          # key10:
+          #   type: string
+          #   format: json-pointer            # draft-06
+          # key10rel:
+          #   type: string
+          #   format: relative-json-pointer   # draft-07
+          # key11:
+          #   type: string
+          #   format: regex                   # draft-07
+          strfmt1:
+            type: string
+            format: bsonobjectid
+          strfmt2:
+            type: string
+            format: creditcard
+          strfmt3:
+            type: string
+            format: duration                # "3 weeks", "1ms"
+          strfmt4:
+            type: string
+            format: hexcolor                # "#FFFFFF"
+          strfmt5:
+            type: string
+            format: isbn
+          strfmt6:
+            type: string
+            format: isbn10
+          strfmt7:
+            type: string
+            format: isbn13
+          strfmt8:
+            type: string
+            format: mac                     # "01:02:03:04:05:06"
+          strfmt9:
+            type: string
+            format: rgbcolor                # "rgb(100,100,100)"
+          strfmt10:
+            type: string
+            format: ssn
+          strfmt11:
+            type: string
+            format: uuid
+          strfmt12:
+            type: string
+            format: uuid3
+          strfmt13:
+            type: string
+            format: uuid4
+          strfmt14:
+            type: string
+            format: uuid5
+          # strfmt15:
+          #   type: string
+          #   format: cidr                    # "192.0.2.1/24", "2001:db8:a0b:12f0::1/32"
+          # key:
+          #   type: string
+          #   contentEncoding: base64         # draft-07
+          #   contentMediaType: image/png     # draft-07
+      annotations:
+        type: string
+        title: Title
+        description: Description
+        default: Unknown                        # force nullable, but doesn't use this value
+        readOnly: true                          # draft-07, validation not supported
+        # writeOnly: true                       # draft-07
+        # examples:                             # draft-06
+        example: Something                      # OpenAPI 2
+  BaseClass:
+    type: object
+    discriminator: kind
+    required:
+      - kind
+    properties:
+      kind:
+        type: string
+  SubClass1:                      # kind="SubClass1"
+    allOf:
+      - $ref: '#/definitions/BaseClass'
+      - type: object
+        properties:
+          something:
+            type: string
+  SubClass2:                      # kind="SubClass2"
+    allOf:
+      - $ref: '#/definitions/BaseClass'
+      - type: object
+        properties:
+          otherthing:
+            type: number
