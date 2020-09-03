@@ -177,10 +177,10 @@ Global Flags:
       --log.level OneOfString   log level [debug|info|warn|err] (default debug)
 
 $ ./bin/address-book -v
-address-book version v0.3.0 1943ca3-dirty 2020-09-02_10:45:21 go1.15
+address-book version v1.0.0 5e45f44 2020-09-03_15:15:53 go1.15.1
 
 $ ./bin/address-book serve
- address-book: inf      main: `started` version v0.3.0 1943ca3-dirty 2020-09-02_10:45:21
+ address-book: inf      main: `started` version v1.0.0 5e45f44 2020-09-03_15:15:53
  address-book: inf   openapi: `OpenAPI protocol` version 0.2.0
  address-book: inf     serve: `serve` localhost:9000 [Prometheus metrics]
  address-book: inf     serve: `serve` 127.0.0.1:8000 [OpenAPI]
@@ -201,7 +201,7 @@ $ ./bin/address-book serve
  address-book: inf   swagger: `Stopped serving address book at http://127.0.0.1:8000`
  address-book: inf     serve: `shutdown` [OpenAPI]
  address-book: inf     serve: `shutdown` [Prometheus metrics]
- address-book: inf      main: `finished` version v0.3.0 1943ca3-dirty 2020-09-02_10:45:21
+ address-book: inf      main: `finished` version v1.0.0 5e45f44 2020-09-03_15:15:53
 ```
 
 # TODO
@@ -210,4 +210,5 @@ $ ./bin/address-book serve
 - [ ] Update JSON Schema support cheatsheet to latest go-swagger version.
 - [ ] Replace trivial in-memory DAL with more complete one based on
   Postgresql with metrics and migrations support.
+- [ ] Add cookie-based auth with CSRF middleware.
 - [ ] Add an example of adapter for external service in `svc/something`.
