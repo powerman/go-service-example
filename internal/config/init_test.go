@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 	_ "github.com/smartystreets/goconvey/convey"
 	"github.com/spf13/pflag"
 )

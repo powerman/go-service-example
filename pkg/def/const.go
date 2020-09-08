@@ -10,12 +10,6 @@ import (
 	"github.com/powerman/getenv"
 )
 
-// Default ports.
-const (
-	Port        = 8000
-	MetricsPort = 9000
-)
-
 // Constants.
 var (
 	ver                   string // Set by ./build script.
@@ -23,6 +17,7 @@ var (
 	Hostname, hostnameErr = os.Hostname()
 	testTimeFactor        = getenv.Float("GO_TEST_TIME_FACTOR", 1.0)
 	TestSecond            = time.Duration(float64(time.Second) * testTimeFactor)
+	TestTimeout           = 7 * TestSecond
 )
 
 // Version returns application version based on build info.

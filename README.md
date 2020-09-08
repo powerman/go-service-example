@@ -42,16 +42,16 @@ adapters":
 - `api/*` - definitions of own and 3rd-party APIs/protocols and related
   auto-generated code
 - `cmd/*` - main application(s)
-- `internal/def` - defaults for both application(s) and tests
 - `internal/config` - configuration(s) (default values, env, flags) for
   application(s) subcommands and tests
 - `internal/app` - define interfaces ("ports") and implements business-logic
-- `internal/srv/*`, `internal/dal`, `internal/svc/*` - implements
-  "adapters" (for APIs/UI served by application(s), DB, access to external
-  services)
-- `pkg/*`, `internal/pkg/*` - helper packages, not related to architecture
-  and business-logic (may be later moved to own modules and/or replaced by
-  external dependencies)
+- `internal/srv/*` - adapters for served APIs/UI
+- `internal/dal` - adapter for data storage
+- `internal/svc/*` - adapters for accessing external services
+- `pkg/*` - helper packages, not related to architecture and
+  business-logic (may be later moved to own modules and/or replaced by
+  external dependencies), e.g.:
+    - `pkg/def/` - project-wide defaults
 
 ## Features
 
@@ -80,11 +80,11 @@ adapters":
 - Tools used to build/test project:
 
 ```sh
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.30.0
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.31.0
 go get gotest.tools/gotestsum@v0.5.3
-curl -sSfL https://github.com/go-swagger/go-swagger/releases/download/v0.25.0/swagger_$(uname)_amd64 | install /dev/stdin $(go env GOPATH)/bin/swagger
 go get github.com/golang/mock/mockgen@v1.4.4
 go get github.com/cheekybits/genny@master
+curl -sSfL https://github.com/go-swagger/go-swagger/releases/download/v0.25.0/swagger_$(uname)_amd64 | install /dev/stdin $(go env GOPATH)/bin/swagger
 ```
 
 ## Setup
@@ -117,6 +117,7 @@ convenience only.
     - Access project at host/port(s) defined in `env.sh`.
 
 ### Cheatsheet
+
 ```sh
 dc up -d --remove-orphans               # (re)start all project's services
 dc logs -f -t                           # view logs of all services

@@ -13,9 +13,9 @@ import (
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client"
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/netx"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/srv/openapi"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
 	"github.com/prometheus/client_golang/prometheus"
 	_ "github.com/smartystreets/goconvey/convey"
 )
@@ -76,7 +76,7 @@ func testNewServer(t *check.C) (c *client.AddressBook, url string, mockAppl *app
 	url = fmt.Sprintf("http://%s", ln.Addr().String())
 
 	// Avoid race between server.Serve() and server.Shutdown().
-	ctx, cancel := context.WithTimeout(context.Background(), 10*def.TestSecond)
+	ctx, cancel := context.WithTimeout(context.Background(), def.TestTimeout)
 	defer cancel()
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	t.Must(t.Nil(err))

@@ -14,8 +14,8 @@ import (
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi"
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi/op"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/netx"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
 	"github.com/powerman/structlog"
 	"github.com/sebest/xff"
 )
@@ -98,7 +98,7 @@ func fromRequest(r *http.Request, auth *app.Auth) (Ctx, Log, string) { //nolint:
 	if auth != nil {
 		userID = auth.UserID
 	}
-	log := structlog.FromContext(ctx, nil).SetDefaultKeyvals(def.LogUser, userID)
+	log := structlog.FromContext(ctx, nil).SetDefaultKeyvals(def.LogUserID, userID)
 	remoteIP, _, _ := net.SplitHostPort(r.RemoteAddr)
 	return ctx, log, remoteIP
 }

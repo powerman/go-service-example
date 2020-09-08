@@ -7,7 +7,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 	"github.com/prometheus/client_golang/prometheus"
 	_ "github.com/smartystreets/goconvey/convey"
 )

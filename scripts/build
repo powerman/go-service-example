@@ -21,7 +21,7 @@ mkdir bin/
 export CGO_ENABLED=0
 
 build() {
-	go build -ldflags "-X '$(go list -m)/internal/def.ver=$(gitver)'" -o bin/ "$@" ./cmd/*
+	go build -ldflags "-X '$(go list -m)/pkg/def.ver=$(gitver)'" -o bin/ "$@" ./cmd/*
 }
 
 # Build binaries for linux-based Docker container.

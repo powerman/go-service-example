@@ -9,7 +9,7 @@ import (
 	"github.com/go-openapi/loads"
 	"github.com/powerman/check"
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 )
 
 func TestServeSwagger(tt *testing.T) {
@@ -34,7 +34,7 @@ func TestServeSwagger(tt *testing.T) {
 		{path.Join(basePath, "swagger.json"), 200},
 	}
 	for _, tc := range testCases {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*def.TestSecond)
+		ctx, cancel := context.WithTimeout(context.Background(), def.TestTimeout)
 		req, err := http.NewRequestWithContext(ctx, "GET", tsURL+tc.path, nil)
 		t.Nil(err)
 		resp, err := c.Do(req)

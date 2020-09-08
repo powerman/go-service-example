@@ -10,8 +10,8 @@ import (
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/config"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/srv/openapi"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 )
 
 func TestMain(m *testing.M) {

@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 	"github.com/powerman/structlog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/cors"

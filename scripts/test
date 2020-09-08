@@ -1,6 +1,12 @@
 #!/bin/bash
 set -x -e -o pipefail
 
+# When https://github.com/quasilyte/go-ruleguard/issues/78 will be
+# implemented and available in golangci-lint then replace using
+# build/gorules/rules.go.
+mod="$(go list -m)"
+(! grep --color=auto -r "\"$mod/internal" pkg)
+
 golangci-lint run
 
 gotestsum -- -race -tags=integration ./...

@@ -7,8 +7,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/netx"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
 	"github.com/powerman/must"
 	"github.com/powerman/structlog"
 	"github.com/prometheus/client_golang/prometheus"
@@ -29,7 +29,7 @@ type OpenAPIServer interface {
 // OpenAPI starts HTTP/HTTPS server using srv logged as service.
 // It runs until failed or ctx.Done.
 func OpenAPI(ctx Ctx, srv OpenAPIServer, service string) error {
-	log := structlog.FromContext(ctx, nil).New(def.LogService, service)
+	log := structlog.FromContext(ctx, nil).New(def.LogServer, service)
 
 	for _, f := range []func() (net.Listener, error){srv.HTTPListener, srv.TLSListener} {
 		ln, err := f()
@@ -55,7 +55,7 @@ func OpenAPI(ctx Ctx, srv OpenAPIServer, service string) error {
 // HTTP starts HTTP server on addr using handler logged as service.
 // It runs until failed or ctx.Done.
 func HTTP(ctx Ctx, addr netx.Addr, handler http.Handler, service string) error {
-	log := structlog.FromContext(ctx, nil).New(def.LogService, service)
+	log := structlog.FromContext(ctx, nil).New(def.LogServer, service)
 
 	srv := &http.Server{
 		Addr:    addr.String(),

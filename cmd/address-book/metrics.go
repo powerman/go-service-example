@@ -3,7 +3,7 @@ package main
 import (
 	"runtime"
 
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

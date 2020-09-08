@@ -5,15 +5,15 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/netx"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
 )
 
 func Test(t *testing.T) {
 	want := &ServeConfig{
 		APIKeyAdmin: "admin",
-		Addr:        netx.NewAddr(def.Hostname, def.Port),
-		MetricsAddr: netx.NewAddr(def.Hostname, def.MetricsPort),
+		Addr:        netx.NewAddr(def.Hostname, 8000),
+		MetricsAddr: netx.NewAddr(def.Hostname, 9000),
 	}
 
 	t.Run("required", func(tt *testing.T) {

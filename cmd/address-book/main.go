@@ -11,17 +11,17 @@ import (
 	"time"
 
 	"github.com/powerman/appcfg"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/cobrax"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/cobrax"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
 	"github.com/powerman/structlog"
 	"github.com/spf13/cobra"
 )
 
 //nolint:gochecknoglobals // Main.
 var (
-	log = structlog.New(structlog.KeyUnit, "main")
-
 	svc = &service{}
+
+	log = structlog.New(structlog.KeyUnit, "main")
 
 	logLevel = appcfg.MustOneOfString("debug", []string{"debug", "info", "warn", "err"})
 	rootCmd  = &cobra.Command{
@@ -46,12 +46,12 @@ var (
 func main() {
 	err := def.Init()
 	if err != nil {
-		log.Fatalln("failed to get defaults:", err)
+		log.Fatalf("failed to get defaults: %s", err)
 	}
 
 	err = initService(rootCmd, serveCmd)
 	if err != nil {
-		log.Fatalln("failed to init service:", err)
+		log.Fatalf("failed to init service: %s", err)
 	}
 
 	rootCmd.PersistentFlags().Var(&logLevel, "log.level", "log level [debug|info|warn|err]")
@@ -82,7 +82,8 @@ func runServeWithGracefulShutdown(_ *cobra.Command, _ []string) error {
 	go func() {
 		<-ctxShutdown.Done()
 		time.Sleep(serveShutdownTimeout.Value(nil))
-		log.Fatalln("failed to graceful shutdown", "version", def.Version())
+		log.PrintErr("failed to graceful shutdown", "version", def.Version())
+		os.Exit(1)
 	}()
 
 	return svc.runServe(ctxStartup, ctxShutdown, shutdown)

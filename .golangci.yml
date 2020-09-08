@@ -26,7 +26,7 @@ run:
   # "/" will be replaced by current OS file path separator to properly work
   # on Windows.
   skip-dirs:
-    - old
+    #- old
     - "^api/(.*/)?(client|model|restapi)$"
 
   # default is true. Enables skipping of directories:
@@ -153,6 +153,8 @@ linters-settings:
         paramsOnly: true
       rangeValCopy:
         sizeThreshold: 32
+      ruleguard:
+        rules: "build/gorules/rules.go" # Run `golangci-lint cache clean` when it changes!
   gocyclo:
     # minimal code complexity to report, 30 by default (but we recommend 10-20)
     min-complexity: 15
@@ -404,7 +406,7 @@ issues:
         - gocritic
 
     # Package def is designed to contain global constants.
-    - path: internal/def/
+    - path: pkg/def/
       linters:
         - gochecknoglobals
 
@@ -418,9 +420,30 @@ issues:
       linters:
         - funlen
 
+    # Servers are allowed to contain a lot of handlers/middlewares.
+    - path: internal/srv/[^/]*/srv.go
+      text: Function 'NewServer'
+      linters:
+        - funlen
+
     # Common well-known style of the project.
-    - path: ^ # Obvious.
-      text: '`(Ctx|Log)` should have comment'
+    - path: internal/(config|srv/[^/]*|sub|app|dal|svc/[^/]*)/[^/]*.go
+      text: 'should have a package comment'
+
+    - path: ^
+      text: '`(Ctx|Log|InitMetrics)` should have comment'
+
+    - path: internal/config/
+      text: '`(FlagSets|Init|\w+Config|Get\w+|MustGet\w+)` should have comment'
+
+    - path: internal/srv/
+      text: '`(Config|Server|NewServer)` should have comment'
+
+    - path: internal/sub/
+      text: '`(Config|Sub|New)` should have comment'
+
+    - path: internal/app/
+      text: '`(Config|App|New)` should have comment'
 
     - path: internal/app/ # Should be documented in app.Appl interface.
       text: '`App[.]\w+` should have comment'
@@ -428,22 +451,17 @@ issues:
     - path: internal/dal/ # Should be documented in app.Repo interface.
       text: '`Repo[.]\w+` should have comment'
 
-    - path: internal/svc/ # Should be documented in app.Svc* interface.
-      text: '`Svc[.]\w+` should have comment'
-
-    - path: internal/app/ # Obvious.
-      text: '`(Config|App|New)` should have comment'
-
-    - path: internal/svc/ # Obvious.
+    - path: internal/svc/
       text: '`(Config|Svc|New)` should have comment'
 
-    - path: internal/srv/ # Obvious.
-      text: '`(Config|NewServer)` should have comment'
+    - path: internal/svc/ # Should be documented in app.Svc* interface.
+      text: '`Svc[.]\w+` should have comment'
 
     - path: ^api/ext- # Not our API, should be documented elsewhere.
       text: 'should have comment'
 
-    - path: ^cmd/|internal/config/ # Require access to unexported identifiers.
+    # Require access to unexported identifiers from tests.
+    - path: ^cmd/|internal/config/
       linters:
         - testpackage
 

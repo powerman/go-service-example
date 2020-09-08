@@ -4,13 +4,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-// Metrics provides common metrics used by all packages.
+// Metrics shared by all packages.
 type Metrics struct {
 	PanicsTotal           prometheus.Counter
 	MisconfigurationTotal prometheus.Counter
 }
 
-// NewMetrics registers and returns common metrics used by all packages.
+// NewMetrics registers and returns metrics shared by all packages.
 func NewMetrics(reg *prometheus.Registry) Metrics {
 	var metrics Metrics
 	metrics.PanicsTotal = prometheus.NewCounter(

@@ -10,9 +10,9 @@ import (
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client"
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client/op"
 	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/def"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/pkg/netx"
 	"github.com/powerman/go-service-goswagger-clean-example/internal/srv/openapi"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
 )
 
 func TestSmoke(tt *testing.T) {
@@ -20,16 +20,14 @@ func TestSmoke(tt *testing.T) {
 
 	s := &service{cfg: cfg}
 
-	ctxStartup, cancel := context.WithTimeout(ctx, 10*def.TestSecond)
+	ctxStartup, cancel := context.WithTimeout(ctx, def.TestTimeout)
 	defer cancel()
 	ctxShutdown, shutdown := context.WithCancel(ctx)
 	errc := make(chan error)
 	go func() { errc <- s.runServe(ctxStartup, ctxShutdown, shutdown) }()
 	defer func() {
 		shutdown()
-		if err := <-errc; err != nil {
-			t.Log("failed to Serve:", err)
-		}
+		t.Nil(<-errc, "RunServe")
 	}()
 	t.Must(t.Nil(netx.WaitTCPPort(ctxStartup, cfg.Addr), "connect to service"))
 
