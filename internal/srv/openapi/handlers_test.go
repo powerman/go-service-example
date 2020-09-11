@@ -17,7 +17,8 @@ import (
 func TestListContacts(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	c, _, mockApp := testNewServer(t)
+	cleanup, c, _, mockApp := testNewServer(t)
+	defer cleanup()
 	params := op.NewListContactsParams()
 
 	mockApp.EXPECT().Contacts(gomock.Any(), authUser).Return(nil, io.EOF)
@@ -53,7 +54,8 @@ func TestListContacts(tt *testing.T) {
 func TestAddContact(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	c, _, mockApp := testNewServer(t)
+	cleanup, c, _, mockApp := testNewServer(t)
+	defer cleanup()
 	params := op.NewAddContactParams()
 
 	mockApp.EXPECT().AddContact(gomock.Any(), authAdmin, " ").Return(nil, io.EOF)

@@ -10,7 +10,8 @@ import (
 
 func TestContacts(tt *testing.T) {
 	t := check.T(tt)
-	a, mockRepo := testNew(t)
+	cleanup, a, mockRepo := testNew(t)
+	defer cleanup()
 
 	var (
 		c1 = app.Contact{ID: 1, Name: "A"}
@@ -31,7 +32,8 @@ func TestContacts(tt *testing.T) {
 
 func TestAddContact(tt *testing.T) {
 	t := check.T(tt)
-	a, mockRepo := testNew(t)
+	cleanup, a, mockRepo := testNew(t)
+	defer cleanup()
 
 	c1 := app.Contact{Name: "A"}
 

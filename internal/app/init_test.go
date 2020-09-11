@@ -27,11 +27,10 @@ var (
 	auth1 = app.Auth{UserID: "1"}
 )
 
-func testNew(t *check.C) (*app.App, *app.MockRepo) {
+func testNew(t *check.C) (func(), *app.App, *app.MockRepo) {
 	ctrl := gomock.NewController(t)
-	t.Cleanup(ctrl.Finish)
 
 	mockRepo := app.NewMockRepo(ctrl)
 	a := app.New(mockRepo)
-	return a, mockRepo
+	return ctrl.Finish, a, mockRepo
 }

@@ -15,7 +15,8 @@ import (
 func TestServeSwagger(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	_, tsURL, _ := testNewServer(t)
+	cleanup, _, tsURL, _ := testNewServer(t)
+	defer cleanup()
 	c := &http.Client{}
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	t.Nil(err)
