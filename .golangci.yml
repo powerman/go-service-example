@@ -448,6 +448,9 @@ issues:
     - path: internal/app/ # Should be documented in app.Appl interface.
       text: '`App[.]\w+` should have comment'
 
+    - path: internal/dal/
+      text: '`(Config|Repo|New)` should have comment'
+
     - path: internal/dal/ # Should be documented in app.Repo interface.
       text: '`Repo[.]\w+` should have comment'
 

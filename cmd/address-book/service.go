@@ -64,7 +64,7 @@ func (s *service) runServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err er
 		Addr:        s.cfg.Addr,
 	})
 	if err != nil {
-		return err
+		return log.Err("failed to openapi.NewServer", "err", err)
 	}
 
 	err = concurrent.Serve(ctxShutdown, shutdown,
