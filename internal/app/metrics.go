@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

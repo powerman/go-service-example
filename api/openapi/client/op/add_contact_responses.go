@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
+	"github.com/powerman/go-service-example/api/openapi/model"
 )
 
 // AddContactReader is a Reader for the AddContact structure.

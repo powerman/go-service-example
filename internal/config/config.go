@@ -9,8 +9,8 @@ package config
 
 import (
 	"github.com/powerman/appcfg"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
+	"github.com/powerman/go-service-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/netx"
 	"github.com/spf13/pflag"
 )
 

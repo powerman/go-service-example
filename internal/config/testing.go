@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
+	"github.com/powerman/go-service-example/pkg/netx"
 	"github.com/powerman/must"
 	"github.com/spf13/pflag"
 )

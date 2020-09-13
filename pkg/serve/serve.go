@@ -7,8 +7,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
+	"github.com/powerman/go-service-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/netx"
 	"github.com/powerman/must"
 	"github.com/powerman/structlog"
 	"github.com/prometheus/client_golang/prometheus"

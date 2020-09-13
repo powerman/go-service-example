@@ -2,8 +2,8 @@ package openapi
 
 import (
 	"github.com/go-openapi/swag"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client/op"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
+	"github.com/powerman/go-service-example/api/openapi/client/op"
+	"github.com/powerman/go-service-example/api/openapi/model"
 )
 
 // APIError returns model.Error with given code and msg.

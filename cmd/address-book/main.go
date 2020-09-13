@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/powerman/appcfg"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/cobrax"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/cobrax"
+	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/structlog"
 	"github.com/spf13/cobra"
 )

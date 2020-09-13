@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: use `./scripts/build` instead of `docker-compose build`
-    image: "go-service-goswagger-clean-example:latest"
+    image: "go-service-example:latest"
     container_name: example_address-book
     restart: always
     ports:

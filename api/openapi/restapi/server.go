@@ -25,7 +25,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"golang.org/x/net/netutil"
 
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi/op"
+	"github.com/powerman/go-service-example/api/openapi/restapi/op"
 )
 
 const (

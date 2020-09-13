@@ -9,8 +9,8 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi/op"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/api/openapi/restapi/op"
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 

@@ -9,7 +9,7 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client/op"
+	"github.com/powerman/go-service-example/api/openapi/client/op"
 )
 
 // Default address book HTTP client.

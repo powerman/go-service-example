@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/loads"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi"
+	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

@@ -3,8 +3,8 @@ package openapi
 import (
 	"errors"
 
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi/op"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/api/openapi/restapi/op"
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 func (srv *server) listContacts(params op.ListContactsParams, auth *app.Auth) op.ListContactsResponder {

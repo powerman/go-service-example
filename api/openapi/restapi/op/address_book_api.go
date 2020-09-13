@@ -19,7 +19,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 // NewAddressBookAPI creates a new AddressBook instance

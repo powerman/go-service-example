@@ -5,7 +5,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 // Ctx is a synonym for convenience.

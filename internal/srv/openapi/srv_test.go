@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-openapi/loads"
 	"github.com/powerman/check"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-example/api/openapi/restapi"
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 func TestServeSwagger(tt *testing.T) {

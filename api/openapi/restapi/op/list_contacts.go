@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 // ListContactsHandlerFunc turns a function with the right signature into a list contacts handler

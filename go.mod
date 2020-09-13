@@ -1,4 +1,4 @@
-module github.com/powerman/go-service-goswagger-clean-example
+module github.com/powerman/go-service-example
 
 go 1.15
 

@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
+	"github.com/powerman/go-service-example/api/openapi/model"
 )
 
 // NewAddContactParams creates a new AddContactParams object

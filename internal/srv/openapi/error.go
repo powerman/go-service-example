@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/swag"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/restapi/op"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
+	"github.com/powerman/go-service-example/api/openapi/model"
+	"github.com/powerman/go-service-example/api/openapi/restapi/op"
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 func errListContacts(log Log, err error, code errCode) op.ListContactsResponder {

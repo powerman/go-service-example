@@ -7,12 +7,12 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client/op"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/srv/openapi"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/def"
-	"github.com/powerman/go-service-goswagger-clean-example/pkg/netx"
+	"github.com/powerman/go-service-example/api/openapi/client"
+	"github.com/powerman/go-service-example/api/openapi/client/op"
+	"github.com/powerman/go-service-example/api/openapi/model"
+	"github.com/powerman/go-service-example/internal/srv/openapi"
+	"github.com/powerman/go-service-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/netx"
 )
 
 func TestSmoke(tt *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	oapierrors "github.com/go-openapi/errors"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 var errRequireAdmin = errors.New("only admin can make changes")

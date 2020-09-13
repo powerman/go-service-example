@@ -1,7 +1,7 @@
 package dal
 
 import (
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
+	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/structlog"
 )
 

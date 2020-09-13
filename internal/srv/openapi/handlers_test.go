@@ -8,10 +8,10 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/client/op"
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/app"
-	"github.com/powerman/go-service-goswagger-clean-example/internal/srv/openapi"
+	"github.com/powerman/go-service-example/api/openapi/client/op"
+	"github.com/powerman/go-service-example/api/openapi/model"
+	"github.com/powerman/go-service-example/internal/app"
+	"github.com/powerman/go-service-example/internal/srv/openapi"
 )
 
 func TestListContacts(tt *testing.T) {

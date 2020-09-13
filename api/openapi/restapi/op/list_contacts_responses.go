@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/powerman/go-service-goswagger-clean-example/api/openapi/model"
+	"github.com/powerman/go-service-example/api/openapi/model"
 )
 
 // ListContactsOKCode is the HTTP code returned for type ListContactsOK
