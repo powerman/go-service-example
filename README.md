@@ -11,6 +11,22 @@ validations/annotations for JSON body actually implemented by go-swagger
 v0.18.0.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Overview](#overview)
+  - [The Clean Architecture](#the-clean-architecture)
+  - [The hexagonal architecture, or ports and adapters architecture](#the-hexagonal-architecture-or-ports-and-adapters-architecture)
+  - [Structure of Go packages](#structure-of-go-packages)
+  - [Features](#features)
+- [Development](#development)
+  - [Requirements](#requirements)
+  - [Setup](#setup)
+  - [Usage](#usage)
+    - [Cheatsheet](#cheatsheet)
+- [Run](#run)
+- [TODO](#todo)
+
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Overview
