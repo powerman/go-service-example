@@ -34,7 +34,6 @@ jobs:
           EXAMPLE_APIKEY_ADMIN: "admin"
     steps:
       - checkout
-      - setup_remote_docker
       - *setup_env
       - restore_cache:
           keys:

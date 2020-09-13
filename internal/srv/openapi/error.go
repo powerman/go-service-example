@@ -20,7 +20,7 @@ func errListContacts(log Log, err error, code errCode) op.ListContactsResponder 
 
 	msg := err.Error()
 	if code.status == http.StatusInternalServerError { // Do no expose details about internal errors.
-		msg = "internal error"
+		msg = "internal error" //nolint:goconst // Duplicated by go:generate.
 	}
 
 	return op.NewListContactsDefault(code.status).WithPayload(&model.Error{
