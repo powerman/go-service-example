@@ -1,6 +1,10 @@
 #!/bin/bash
 set -x -e -o pipefail
 
+hadolint Dockerfile
+
+shellcheck env.sh.dist scripts/*
+
 # When https://github.com/quasilyte/go-ruleguard/issues/78 will be
 # implemented and available in golangci-lint then replace using
 # build/gorules/rules.go.
