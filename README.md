@@ -166,6 +166,31 @@ available networks, then you'll have to restart docker service or reboot.
 
 ## Run
 
+### Docker
+
+```
+$ docker run -i -t --rm ghcr.io/powerman/go-service-example -v
+address-book version 0894daa 2020-09-13_19:44:26 go1.15.2
+$ docker run -i -t --rm \
+    -p 8000:8000 \
+    -e EXAMPLE_APIKEY_ADMIN=secret \
+    ghcr.io/powerman/go-service-example
+ address-book: inf      main: `started` version 0894daa 2020-09-13_19:44:26
+ address-book: inf   openapi: `OpenAPI protocol` version 0.2.0
+ address-book: inf     serve: `serve` b3ecd12369c3:9000 [Prometheus metrics]
+ address-book: inf     serve: `serve` 172.19.0.6:8000 [OpenAPI]
+ address-book: inf   swagger: `Serving address book at http://172.19.0.6:8000`
+^C
+ address-book: inf   swagger: `Shutting down... `
+ address-book: inf   swagger: `HTTP server Shutdown: context deadline exceeded`
+ address-book: inf   swagger: `Stopped serving address book at http://172.19.0.6:8000`
+ address-book: inf     serve: `shutdown` [OpenAPI]
+ address-book: inf     serve: `shutdown` [Prometheus metrics]
+ address-book: inf      main: `finished` version 0894daa 2020-09-13_19:44:26
+```
+
+### Source
+
 Use of the `./scripts/build` script is optional (it's main feature is
 embedding git version into compiled binary), you can use usual
 `go get|install|build` to get the application instead.
