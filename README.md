@@ -25,6 +25,8 @@ v0.18.0.
   - [Usage](#usage)
     - [Cheatsheet](#cheatsheet)
 - [Run](#run)
+  - [Docker](#docker)
+  - [Source](#source)
 - [TODO](#todo)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
