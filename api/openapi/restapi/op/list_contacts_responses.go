@@ -63,7 +63,7 @@ func (o *ListContactsOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 
 func (o *ListContactsOK) ListContactsResponder() {}
 
-/*ListContactsDefault Generic error response.
+/*ListContactsDefault General errors using same model as used by go-swagger for validation errors.
 
 swagger:response listContactsDefault
 */

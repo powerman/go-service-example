@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"path"
 
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime"
@@ -59,26 +58,23 @@ func NewServer(appl app.Appl, cfg Config) (*restapi.Server, error) {
 	api.APIKeyAuth = srv.authenticate
 	api.APIAuthorizer = runtime.AuthorizerFunc(srv.authorize)
 
-	api.ListContactsHandler = op.ListContactsHandlerFunc(srv.listContacts)
-	api.AddContactHandler = op.AddContactHandlerFunc(srv.addContact)
+	api.HealthCheckHandler = op.HealthCheckHandlerFunc(srv.HealthCheck)
+	api.ListContactsHandler = op.ListContactsHandlerFunc(srv.ListContacts)
+	api.AddContactHandler = op.AddContactHandlerFunc(srv.AddContact)
 
 	server := restapi.NewServer(api)
 	server.Host = cfg.Addr.Host()
 	server.Port = cfg.Addr.Port()
 
 	// The middleware executes before anything.
+	api.UseSwaggerUI()
 	globalMiddlewares := func(handler http.Handler) http.Handler {
 		xffmw, _ := xff.Default()
 		logger := makeLogger(cfg.BasePath)
 		accesslog := makeAccessLog(cfg.BasePath)
-		redocOpts := middleware.RedocOpts{
-			BasePath: cfg.BasePath,
-			SpecURL:  path.Join(cfg.BasePath, "/swagger.json"),
-		}
 		return noCache(xffmw.Handler(logger(recovery(accesslog(
 			middleware.Spec(cfg.BasePath, restapi.FlatSwaggerJSON,
-				middleware.Redoc(redocOpts,
-					handleCORS(handler))))))))
+				cors(handler)))))))
 	}
 	// The middleware executes after serving /swagger.json and routing,
 	// but before authentication, binding and validation.
@@ -92,13 +88,15 @@ func NewServer(appl app.Appl, cfg Config) (*restapi.Server, error) {
 	return server, nil
 }
 
-func fromRequest(r *http.Request, auth *app.Auth) (Ctx, Log, string) { //nolint:unparam // Some results may be unused yet.
+func fromRequest(r *http.Request, auth *app.Auth) (Ctx, Log) {
 	ctx := r.Context()
+	remoteIP, _, _ := net.SplitHostPort(r.RemoteAddr)
+	ctx = def.NewContextWithRemoteIP(ctx, remoteIP)
+	log := structlog.FromContext(ctx, nil)
 	userID := ""
 	if auth != nil {
 		userID = auth.UserID
 	}
-	log := structlog.FromContext(ctx, nil).SetDefaultKeyvals(def.LogUserID, userID)
-	remoteIP, _, _ := net.SplitHostPort(r.RemoteAddr)
-	return ctx, log, remoteIP
+	log.SetDefaultKeyvals(def.LogUserID, userID)
+	return ctx, log
 }

@@ -38,22 +38,19 @@ func TestSmoke(tt *testing.T) {
 	})
 
 	{
-		params := op.NewAddContactParams()
-		params.Contact = &model.Contact{Name: apiContact1.Name}
-		res, err := openapiClient.Op.AddContact(params, apiKeyUser)
+		args := &model.Contact{Name: apiContact1.Name}
+		res, err := openapiClient.Op.AddContact(op.NewAddContactParams().WithArgs(args), apiKeyUser)
 		t.DeepEqual(openapi.ErrPayload(err), apiError403)
 		t.Nil(res)
 	}
 	{
-		params := op.NewAddContactParams()
-		params.Contact = &model.Contact{Name: apiContact1.Name}
-		res, err := openapiClient.Op.AddContact(params, apiKeyAdmin)
+		args := &model.Contact{Name: apiContact1.Name}
+		res, err := openapiClient.Op.AddContact(op.NewAddContactParams().WithArgs(args), apiKeyAdmin)
 		t.Nil(openapi.ErrPayload(err))
 		t.DeepEqual(res, &op.AddContactCreated{Payload: apiContact1})
 	}
 	{
-		params := op.NewListContactsParams()
-		res, err := openapiClient.Op.ListContacts(params, apiKeyAdmin)
+		res, err := openapiClient.Op.ListContacts(op.NewListContactsParams(), apiKeyAdmin)
 		t.Nil(openapi.ErrPayload(err))
 		t.DeepEqual(res, &op.ListContactsOK{Payload: []*model.Contact{apiContact1}})
 	}

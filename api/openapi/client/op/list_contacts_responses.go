@@ -81,7 +81,7 @@ func NewListContactsDefault(code int) *ListContactsDefault {
 
 /*ListContactsDefault handles this case with default header values.
 
-Generic error response.
+General errors using same model as used by go-swagger for validation errors.
 */
 type ListContactsDefault struct {
 	_statusCode int

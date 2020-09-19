@@ -62,8 +62,8 @@ for the add contact operation typically these are written to a http.Request
 */
 type AddContactParams struct {
 
-	/*Contact*/
-	Contact *model.Contact
+	/*Args*/
+	Args *model.Contact
 
 	timeout    time.Duration
 	Context    context.Context
@@ -103,15 +103,15 @@ func (o *AddContactParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithContact adds the contact to the add contact params
-func (o *AddContactParams) WithContact(contact *model.Contact) *AddContactParams {
-	o.SetContact(contact)
+// WithArgs adds the args to the add contact params
+func (o *AddContactParams) WithArgs(args *model.Contact) *AddContactParams {
+	o.SetArgs(args)
 	return o
 }
 
-// SetContact adds the contact to the add contact params
-func (o *AddContactParams) SetContact(contact *model.Contact) {
-	o.Contact = contact
+// SetArgs adds the args to the add contact params
+func (o *AddContactParams) SetArgs(args *model.Contact) {
+	o.Args = args
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -122,8 +122,8 @@ func (o *AddContactParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 	}
 	var res []error
 
-	if o.Contact != nil {
-		if err := r.SetBodyParam(o.Contact); err != nil {
+	if o.Args != nil {
+		if err := r.SetBodyParam(o.Args); err != nil {
 			return err
 		}
 	}

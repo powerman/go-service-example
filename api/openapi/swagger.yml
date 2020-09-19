@@ -30,7 +30,7 @@ definitions:
       - message
     properties:
       code:
-        description: Either same as HTTP Status Code OR >= 600.
+        description: Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422.
         type: integer
         format: int32
       message:
@@ -51,7 +51,7 @@ definitions:
 
 responses:
   GenericError:
-    description: Generic error response.
+    description: General errors using same model as used by go-swagger for validation errors.
     schema:
       $ref: '#/definitions/Error'
 
@@ -63,6 +63,19 @@ produces:
   - application/json
 
 paths:
+  /health-check:
+    get:
+      operationId: healthCheck
+      description: Returns 200 if service works okay.
+      security: []
+      responses:
+        '200':
+          description: Extra details about service status, if any.
+          schema:
+            type: object
+            additionalProperties: true
+        default: {$ref: '#/responses/GenericError'}
+
   /contacts:
     get:
       operationId: listContacts
@@ -80,7 +93,7 @@ paths:
       operationId: addContact
       description: Add new contact.
       parameters:
-        - name: contact
+        - name: args
           required: true
           in: body
           schema:

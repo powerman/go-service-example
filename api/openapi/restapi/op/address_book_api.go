@@ -47,6 +47,9 @@ func NewAddressBookAPI(spec *loads.Document) *AddressBookAPI {
 		AddContactHandler: AddContactHandlerFunc(func(params AddContactParams, principal *app.Auth) AddContactResponder {
 			return AddContactNotImplemented()
 		}),
+		HealthCheckHandler: HealthCheckHandlerFunc(func(params HealthCheckParams) HealthCheckResponder {
+			return HealthCheckNotImplemented()
+		}),
 		ListContactsHandler: ListContactsHandlerFunc(func(params ListContactsParams, principal *app.Auth) ListContactsResponder {
 			return ListContactsNotImplemented()
 		}),
@@ -104,6 +107,8 @@ type AddressBookAPI struct {
 
 	// AddContactHandler sets the operation handler for the add contact operation
 	AddContactHandler AddContactHandler
+	// HealthCheckHandler sets the operation handler for the health check operation
+	HealthCheckHandler HealthCheckHandler
 	// ListContactsHandler sets the operation handler for the list contacts operation
 	ListContactsHandler ListContactsHandler
 	// ServeError is called when an error is received, there is a default handler
@@ -188,6 +193,9 @@ func (o *AddressBookAPI) Validate() error {
 
 	if o.AddContactHandler == nil {
 		unregistered = append(unregistered, "AddContactHandler")
+	}
+	if o.HealthCheckHandler == nil {
+		unregistered = append(unregistered, "HealthCheckHandler")
 	}
 	if o.ListContactsHandler == nil {
 		unregistered = append(unregistered, "ListContactsHandler")
@@ -295,6 +303,10 @@ func (o *AddressBookAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/contacts"] = NewAddContact(o.context, o.AddContactHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/health-check"] = NewHealthCheck(o.context, o.HealthCheckHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

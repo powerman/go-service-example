@@ -20,7 +20,7 @@ import (
 // swagger:model Error
 type Error struct {
 
-	// Either same as HTTP Status Code OR >= 600.
+	// Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422.
 	// Required: true
 	Code *int32 `json:"code"`
 
@@ -33,7 +33,7 @@ type Error struct {
 func (m *Error) UnmarshalJSON(data []byte) error {
 	var props struct {
 
-		// Either same as HTTP Status Code OR >= 600.
+		// Either same as HTTP Status Code OR >= 600 with HTTP Status Code 422.
 		// Required: true
 		Code *int32 `json:"code"`
 

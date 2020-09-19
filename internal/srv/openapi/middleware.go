@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net"
 	"net/http"
+	"path"
 	"strconv"
 	"strings"
 
@@ -14,7 +15,7 @@ import (
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/structlog"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/rs/cors"
+	corspkg "github.com/rs/cors"
 )
 
 type middlewareFunc func(http.Handler) http.Handler
@@ -34,11 +35,12 @@ func noCache(next http.Handler) http.Handler {
 func makeLogger(basePath string) middlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log := structlog.New(
+			log := structlog.FromContext(r.Context(), nil)
+			log.SetDefaultKeyvals(
 				def.LogRemote, r.RemoteAddr,
 				def.LogHTTPStatus, "",
 				def.LogHTTPMethod, r.Method,
-				def.LogFunc, strings.TrimPrefix(r.URL.Path, basePath),
+				def.LogFunc, path.Join("/", strings.TrimPrefix(r.URL.Path, basePath)),
 			)
 			r = r.WithContext(structlog.NewContext(r.Context(), log))
 
@@ -106,8 +108,8 @@ func makeAccessLog(basePath string) middlewareFunc {
 	}
 }
 
-func handleCORS(next http.Handler) http.Handler {
-	return cors.AllowAll().Handler(next)
+func cors(next http.Handler) http.Handler {
+	return corspkg.AllowAll().Handler(next)
 }
 
 // MiddlewareError is not a middleware, it's a helper for returning errors

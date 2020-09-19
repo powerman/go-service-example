@@ -136,6 +136,7 @@ linters-settings:
     disabled-checks:
       - hugeParam        # premature optimization
       - paramTypeCombine # questionable
+      - switchTrue       # questionable
       - yodaStyleExpr    # questionable
 
     # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint run` to see all tags and checks.

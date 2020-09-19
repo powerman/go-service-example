@@ -18,6 +18,10 @@ var (
 
 // Appl provides application features (use cases) service.
 type Appl interface {
+	// HealthCheck returns error if service is unhealthy or current
+	// status otherwise.
+	// Errors: none.
+	HealthCheck(Ctx) (interface{}, error)
 	// Contacts returns all contacts.
 	// Errors: none.
 	Contacts(Ctx, Auth) ([]Contact, error)
@@ -58,4 +62,8 @@ func New(repo Repo) *App {
 		repo: repo,
 	}
 	return a
+}
+
+func (a *App) HealthCheck(_ Ctx) (interface{}, error) {
+	return "OK", nil
 }

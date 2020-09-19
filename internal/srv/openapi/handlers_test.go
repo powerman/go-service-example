@@ -14,12 +14,46 @@ import (
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 )
 
+func TestHealthCheck(tt *testing.T) {
+	t := check.T(tt)
+	t.Parallel()
+	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
+	defer cleanup()
+
+	mockApp.EXPECT().HealthCheck(gomock.Any()).Return(nil, io.EOF)
+	mockApp.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
+	mockApp.EXPECT().HealthCheck(gomock.Any()).Return("OK", nil)
+	mockApp.EXPECT().HealthCheck(gomock.Any()).Return(map[string]string{"main": "OK"}, nil)
+
+	testCases := []struct {
+		want    interface{}
+		wantErr *model.Error
+	}{
+		{nil, apiError500},
+		{nil, nil},
+		{"OK", nil},
+		{map[string]interface{}{"main": "OK"}, nil},
+	}
+	for _, tc := range testCases {
+		tc := tc
+		t.Run("", func(tt *testing.T) {
+			t := check.T(tt)
+			res, err := c.Op.HealthCheck(op.NewHealthCheckParams())
+			t.DeepEqual(openapi.ErrPayload(err), tc.wantErr)
+			if res == nil {
+				t.DeepEqual(nil, tc.want)
+			} else {
+				t.DeepEqual(res.Payload, tc.want)
+			}
+		})
+	}
+}
+
 func TestListContacts(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockApp := testNewServer(t)
+	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
 	defer cleanup()
-	params := op.NewListContactsParams()
 
 	mockApp.EXPECT().Contacts(gomock.Any(), authUser).Return(nil, io.EOF)
 	mockApp.EXPECT().Contacts(gomock.Any(), authUser).Return(nil, nil)
@@ -27,7 +61,7 @@ func TestListContacts(tt *testing.T) {
 
 	testCases := []struct {
 		apiKey  runtime.ClientAuthInfoWriter
-		want    []*model.Contact
+		want    interface{}
 		wantErr *model.Error
 	}{
 		{nil, nil, apiError401},
@@ -39,13 +73,12 @@ func TestListContacts(tt *testing.T) {
 		tc := tc
 		t.Run("", func(tt *testing.T) {
 			t := check.T(tt)
-			res, err := c.Op.ListContacts(params, tc.apiKey)
-			if tc.wantErr == nil {
-				t.Nil(openapi.ErrPayload(err))
-				t.DeepEqual(res.Payload, tc.want)
+			res, err := c.Op.ListContacts(op.NewListContactsParams(), tc.apiKey)
+			t.DeepEqual(openapi.ErrPayload(err), tc.wantErr)
+			if res == nil {
+				t.DeepEqual(nil, tc.want)
 			} else {
-				t.DeepEqual(openapi.ErrPayload(err), tc.wantErr)
-				t.Nil(res)
+				t.DeepEqual(res.Payload, tc.want)
 			}
 		})
 	}
@@ -54,9 +87,8 @@ func TestListContacts(tt *testing.T) {
 func TestAddContact(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockApp := testNewServer(t)
+	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
 	defer cleanup()
-	params := op.NewAddContactParams()
 
 	mockApp.EXPECT().AddContact(gomock.Any(), authAdmin, " ").Return(nil, io.EOF)
 	mockApp.EXPECT().AddContact(gomock.Any(), authAdmin, "A").Return(nil, app.ErrContactExists)
@@ -65,7 +97,7 @@ func TestAddContact(tt *testing.T) {
 	testCases := []struct {
 		apiKey  runtime.ClientAuthInfoWriter
 		name    string
-		want    *model.Contact
+		want    interface{}
 		wantErr *model.Error
 	}{
 		{nil, "A", nil, apiError401},
@@ -78,14 +110,13 @@ func TestAddContact(tt *testing.T) {
 		tc := tc
 		t.Run("", func(tt *testing.T) {
 			t := check.T(tt)
-			params.Contact = &model.Contact{Name: swag.String(tc.name)}
-			res, err := c.Op.AddContact(params, tc.apiKey)
-			if tc.wantErr == nil {
-				t.Nil(openapi.ErrPayload(err))
-				t.DeepEqual(res.Payload, tc.want)
+			args := &model.Contact{Name: swag.String(tc.name)}
+			res, err := c.Op.AddContact(op.NewAddContactParams().WithArgs(args), tc.apiKey)
+			t.DeepEqual(openapi.ErrPayload(err), tc.wantErr)
+			if res == nil {
+				t.DeepEqual(nil, tc.want)
 			} else {
-				t.DeepEqual(openapi.ErrPayload(err), tc.wantErr)
-				t.Nil(res)
+				t.DeepEqual(res.Payload, tc.want)
 			}
 		})
 	}
