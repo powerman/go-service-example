@@ -119,7 +119,7 @@ jobs:
             TAGS="latest"
           fi
           for TAG in $TAGS; do
-            IMAGE_TAG="ghcr.io/$GITHUB_REPOSITORY:$TAG"
+            IMAGE_TAG="ghcr.io/${GITHUB_REPOSITORY,,*}:$TAG"
             docker tag "$(basename $(go list -m))" "$IMAGE_TAG"
             docker push "$IMAGE_TAG"
           done
