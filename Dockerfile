@@ -1,5 +1,7 @@
 FROM alpine:3.12
 
+LABEL org.opencontainers.image.source="https://github.com/powerman/go-service-example"
+
 WORKDIR /app
 
 HEALTHCHECK --interval=30s --timeout=5s \
