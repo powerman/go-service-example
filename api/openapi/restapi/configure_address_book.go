@@ -53,6 +53,11 @@ func configureAPI(api *op.AddressBookAPI) http.Handler {
 			return op.AddContactNotImplemented()
 		})
 	}
+	if api.HealthCheckHandler == nil {
+		api.HealthCheckHandler = op.HealthCheckHandlerFunc(func(params op.HealthCheckParams) op.HealthCheckResponder {
+			return op.HealthCheckNotImplemented()
+		})
+	}
 	if api.ListContactsHandler == nil {
 		api.ListContactsHandler = op.ListContactsHandlerFunc(func(params op.ListContactsParams, principal *app.Auth) op.ListContactsResponder {
 			return op.ListContactsNotImplemented()

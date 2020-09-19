@@ -59,7 +59,7 @@ func init() {
         "operationId": "addContact",
         "parameters": [
           {
-            "name": "contact",
+            "name": "args",
             "in": "body",
             "required": true,
             "schema": {
@@ -79,6 +79,25 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          }
+        }
+      }
+    },
+    "/health-check": {
+      "get": {
+        "security": [],
+        "description": "Returns 200 if service works okay.",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "Extra details about service status, if any.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "default": {
+            "$ref": "#/responses/GenericError"
           }
         }
       }
@@ -112,7 +131,7 @@ func init() {
       ],
       "properties": {
         "code": {
-          "description": "Either same as HTTP Status Code OR \u003e= 600.",
+          "description": "Either same as HTTP Status Code OR \u003e= 600 with HTTP Status Code 422.",
           "type": "integer",
           "format": "int32",
           "x-order": 0
@@ -126,7 +145,7 @@ func init() {
   },
   "responses": {
     "GenericError": {
-      "description": "Generic error response.",
+      "description": "General errors using same model as used by go-swagger for validation errors.",
       "schema": {
         "$ref": "#/definitions/Error"
       }
@@ -178,7 +197,7 @@ func init() {
             }
           },
           "default": {
-            "description": "Generic error response.",
+            "description": "General errors using same model as used by go-swagger for validation errors.",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -190,7 +209,7 @@ func init() {
         "operationId": "addContact",
         "parameters": [
           {
-            "name": "contact",
+            "name": "args",
             "in": "body",
             "required": true,
             "schema": {
@@ -207,6 +226,28 @@ func init() {
           },
           "default": {
             "description": "- 409.1000: contact already exists\n",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/health-check": {
+      "get": {
+        "security": [],
+        "description": "Returns 200 if service works okay.",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "Extra details about service status, if any.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "default": {
+            "description": "General errors using same model as used by go-swagger for validation errors.",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -243,7 +284,7 @@ func init() {
       ],
       "properties": {
         "code": {
-          "description": "Either same as HTTP Status Code OR \u003e= 600.",
+          "description": "Either same as HTTP Status Code OR \u003e= 600 with HTTP Status Code 422.",
           "type": "integer",
           "format": "int32",
           "x-order": 0
@@ -257,7 +298,7 @@ func init() {
   },
   "responses": {
     "GenericError": {
-      "description": "Generic error response.",
+      "description": "General errors using same model as used by go-swagger for validation errors.",
       "schema": {
         "$ref": "#/definitions/Error"
       }

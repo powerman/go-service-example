@@ -7,8 +7,19 @@ import (
 	"github.com/powerman/go-service-example/internal/app"
 )
 
-func (srv *server) listContacts(params op.ListContactsParams, auth *app.Auth) op.ListContactsResponder {
-	ctx, log, _ := fromRequest(params.HTTPRequest, auth)
+func (srv *server) HealthCheck(params op.HealthCheckParams) op.HealthCheckResponder {
+	ctx, log := fromRequest(params.HTTPRequest, nil)
+	status, err := srv.app.HealthCheck(ctx)
+	switch {
+	default:
+		return errHealthCheck(log, err, codeInternal)
+	case err == nil:
+		return op.NewHealthCheckOK().WithPayload(status)
+	}
+}
+
+func (srv *server) ListContacts(params op.ListContactsParams, auth *app.Auth) op.ListContactsResponder {
+	ctx, log := fromRequest(params.HTTPRequest, auth)
 	cs, err := srv.app.Contacts(ctx, *auth)
 	switch {
 	default:
@@ -18,10 +29,10 @@ func (srv *server) listContacts(params op.ListContactsParams, auth *app.Auth) op
 	}
 }
 
-func (srv *server) addContact(params op.AddContactParams, auth *app.Auth) op.AddContactResponder {
-	ctx, log, _ := fromRequest(params.HTTPRequest, auth)
+func (srv *server) AddContact(params op.AddContactParams, auth *app.Auth) op.AddContactResponder {
+	ctx, log := fromRequest(params.HTTPRequest, auth)
 	log.Debug("calling AddContact")
-	c, err := srv.app.AddContact(ctx, *auth, *params.Contact.Name)
+	c, err := srv.app.AddContact(ctx, *auth, *params.Args.Name)
 	switch {
 	default:
 		return errAddContact(log, err, codeInternal)

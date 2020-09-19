@@ -36,7 +36,7 @@ type AddContactParams struct {
 	  Required: true
 	  In: body
 	*/
-	Contact *model.Contact
+	Args *model.Contact
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -53,9 +53,9 @@ func (o *AddContactParams) BindRequest(r *http.Request, route *middleware.Matche
 		var body model.Contact
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
-				res = append(res, errors.Required("contact", "body", ""))
+				res = append(res, errors.Required("args", "body", ""))
 			} else {
-				res = append(res, errors.NewParseError("contact", "body", "", err))
+				res = append(res, errors.NewParseError("args", "body", "", err))
 			}
 		} else {
 			// validate body object
@@ -64,11 +64,11 @@ func (o *AddContactParams) BindRequest(r *http.Request, route *middleware.Matche
 			}
 
 			if len(res) == 0 {
-				o.Contact = &body
+				o.Args = &body
 			}
 		}
 	} else {
-		res = append(res, errors.Required("contact", "body", ""))
+		res = append(res, errors.Required("args", "body", ""))
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

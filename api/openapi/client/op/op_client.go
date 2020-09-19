@@ -27,6 +27,8 @@ type Client struct {
 type ClientService interface {
 	AddContact(params *AddContactParams, authInfo runtime.ClientAuthInfoWriter) (*AddContactCreated, error)
 
+	HealthCheck(params *HealthCheckParams) (*HealthCheckOK, error)
+
 	ListContacts(params *ListContactsParams, authInfo runtime.ClientAuthInfoWriter) (*ListContactsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
@@ -63,6 +65,39 @@ func (a *Client) AddContact(params *AddContactParams, authInfo runtime.ClientAut
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*AddContactDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+  HealthCheck Returns 200 if service works okay.
+*/
+func (a *Client) HealthCheck(params *HealthCheckParams) (*HealthCheckOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewHealthCheckParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "healthCheck",
+		Method:             "GET",
+		PathPattern:        "/health-check",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &HealthCheckReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*HealthCheckOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*HealthCheckDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 

@@ -2,7 +2,6 @@ package openapi
 
 import (
 	"github.com/go-openapi/swag"
-	"github.com/powerman/go-service-example/api/openapi/client/op"
 	"github.com/powerman/go-service-example/api/openapi/model"
 )
 
@@ -14,14 +13,14 @@ func APIError(code int32, msg string) *model.Error {
 	}
 }
 
-// ErrPayload returns err.Payload or err for unknown errors.
+// ErrPayload returns err.Payload or *model.Error(nil) or err for unknown errors.
 func ErrPayload(err error) interface{} {
-	switch errDefault := err.(type) {
+	switch errDefault, ok := err.(interface{ GetPayload() *model.Error }); true {
+	case ok:
+		return errDefault.GetPayload()
+	case err == nil:
+		return (*model.Error)(nil)
 	default:
 		return err
-	case *op.ListContactsDefault:
-		return errDefault.Payload
-	case *op.AddContactDefault:
-		return errDefault.Payload
 	}
 }
