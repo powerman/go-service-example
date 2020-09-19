@@ -1,6 +1,12 @@
 # Example Go service using go-swagger and The Clean Architecture
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/powerman/go-service-example)](https://pkg.go.dev/github.com/powerman/go-service-example) [![Go Report Card](https://goreportcard.com/badge/github.com/powerman/go-service-example)](https://goreportcard.com/report/github.com/powerman/go-service-example) [![CI/CD](https://github.com/powerman/go-service-example/workflows/CI/CD/badge.svg?event=push)](https://github.com/powerman/go-service-example/actions?query=workflow%3ACI%2FCD) [![CircleCI](https://circleci.com/gh/powerman/go-service-example.svg?style=svg)](https://circleci.com/gh/powerman/go-service-example) [![Coverage Status](https://coveralls.io/repos/github/powerman/go-service-example/badge.svg?branch=master)](https://coveralls.io/github/powerman/go-service-example?branch=master) [![Project Layout](https://img.shields.io/badge/Standard%20Go-Project%20Layout-informational)](https://github.com/golang-standards/project-layout) [![Release](https://img.shields.io/github/v/release/powerman/go-service-example)](https://github.com/powerman/go-service-example/releases/latest)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/powerman/go-service-example)](https://pkg.go.dev/github.com/powerman/go-service-example)
+[![Go Report Card](https://goreportcard.com/badge/github.com/powerman/go-service-example)](https://goreportcard.com/report/github.com/powerman/go-service-example)
+[![CI/CD](https://github.com/powerman/go-service-example/workflows/CI/CD/badge.svg?event=push)](https://github.com/powerman/go-service-example/actions?query=workflow%3ACI%2FCD)
+[![CircleCI](https://circleci.com/gh/powerman/go-service-example.svg?style=svg)](https://circleci.com/gh/powerman/go-service-example)
+[![Coverage Status](https://coveralls.io/repos/github/powerman/go-service-example/badge.svg?branch=master)](https://coveralls.io/github/powerman/go-service-example?branch=master)
+[![Project Layout](https://img.shields.io/badge/Standard%20Go-Project%20Layout-informational)](https://github.com/golang-standards/project-layout)
+[![Release](https://img.shields.io/github/v/release/powerman/go-service-example)](https://github.com/powerman/go-service-example/releases/latest)
 
 This project shows an example of how to use go-swagger accordingly to
 Uncle Bob's "Clean Architecture".
