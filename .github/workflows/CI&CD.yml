@@ -33,7 +33,7 @@ jobs:
       GOVERALLS_VER: '0.0.7'
       EXAMPLE_APIKEY_ADMIN: 'admin'
       EXAMPLE_MYSQL_ADDR_HOST: 'localhost'
-      EXAMPLE_MYSQL_ADDR_PORT: ${{ job.services.mysql.ports['3306'] }}
+      EXAMPLE_MYSQL_ADDR_PORT: ${{ jobs.test.services.mysql.ports['3306'] }}
       EXAMPLE_MYSQL_AUTH_LOGIN: 'root'
       EXAMPLE_MYSQL_AUTH_PASS: ''
       NARADA4D_TEST_MYSQL: 'goose-mysql://root@127.0.0.1:${{ jobs.test.services.mysql.ports[3306] }}'
