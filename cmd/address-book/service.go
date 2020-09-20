@@ -7,7 +7,7 @@ import (
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/config"
-	"github.com/powerman/go-service-example/internal/dal"
+	dal "github.com/powerman/go-service-example/internal/dal/memory"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/concurrent"
 	"github.com/powerman/go-service-example/pkg/def"

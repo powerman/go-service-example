@@ -5,7 +5,7 @@ import (
 
 	"github.com/powerman/check"
 	"github.com/powerman/go-service-example/internal/app"
-	"github.com/powerman/go-service-example/internal/dal"
+	dal "github.com/powerman/go-service-example/internal/dal/memory"
 )
 
 func TestContacts(tt *testing.T) {
