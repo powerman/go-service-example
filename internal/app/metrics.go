@@ -1,8 +1,9 @@
 package app
 
 import (
-	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 //nolint:gochecknoglobals // Metrics are global anyway.

@@ -4,8 +4,9 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/loads"
-	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/powerman/go-service-example/api/openapi/restapi"
 )
 
 // Metric contains general metrics for OpenAPI methods.

@@ -7,6 +7,7 @@ import (
 	oapiclient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/swag"
 	"github.com/powerman/check"
+
 	"github.com/powerman/go-service-example/api/openapi/model"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/config"

@@ -8,13 +8,14 @@ import (
 
 	"github.com/go-openapi/swag"
 	"github.com/powerman/check"
+	"github.com/powerman/mysqlx"
+
 	"github.com/powerman/go-service-example/api/openapi/client"
 	"github.com/powerman/go-service-example/api/openapi/client/op"
 	"github.com/powerman/go-service-example/api/openapi/model"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
-	"github.com/powerman/mysqlx"
 )
 
 func TestSmoke(tt *testing.T) {

@@ -6,10 +6,11 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
-	"github.com/powerman/go-service-example/internal/app"
-	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/prometheus/client_golang/prometheus"
 	_ "github.com/smartystreets/goconvey/convey"
+
+	"github.com/powerman/go-service-example/internal/app"
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 func TestMain(m *testing.M) {

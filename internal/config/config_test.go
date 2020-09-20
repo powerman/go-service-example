@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
+
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
 )

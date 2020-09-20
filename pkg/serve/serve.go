@@ -7,12 +7,13 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/powerman/go-service-example/pkg/def"
-	"github.com/powerman/go-service-example/pkg/netx"
 	"github.com/powerman/must"
 	"github.com/powerman/structlog"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/powerman/go-service-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/netx"
 )
 
 // Ctx is a synonym for convenience.

@@ -5,6 +5,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
+
 	"github.com/powerman/go-service-example/internal/app"
 )
 

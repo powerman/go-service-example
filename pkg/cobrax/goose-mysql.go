@@ -6,9 +6,10 @@ import (
 	"strings"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/powerman/go-service-example/pkg/migrate"
 	goosepkg "github.com/powerman/goose/v2"
 	"github.com/spf13/cobra"
+
+	"github.com/powerman/go-service-example/pkg/migrate"
 )
 
 // GooseMySQLConfig contain configuration for goose command.

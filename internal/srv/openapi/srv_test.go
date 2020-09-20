@@ -13,11 +13,12 @@ import (
 	"github.com/go-openapi/loads"
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
+	"github.com/powerman/structlog"
+
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/api/openapi/restapi/op"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/def"
-	"github.com/powerman/structlog"
 )
 
 type Ctx = context.Context

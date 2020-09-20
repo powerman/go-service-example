@@ -10,12 +10,13 @@ import (
 
 	"github.com/felixge/httpsnoop"
 	"github.com/go-openapi/swag"
-	"github.com/powerman/go-service-example/api/openapi/model"
-	"github.com/powerman/go-service-example/internal/app"
-	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/structlog"
 	"github.com/prometheus/client_golang/prometheus"
 	corspkg "github.com/rs/cors"
+
+	"github.com/powerman/go-service-example/api/openapi/model"
+	"github.com/powerman/go-service-example/internal/app"
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 type middlewareFunc func(http.Handler) http.Handler

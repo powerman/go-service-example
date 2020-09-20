@@ -4,10 +4,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/powerman/go-service-example/pkg/def"
-	"github.com/powerman/go-service-example/pkg/netx"
 	"github.com/powerman/must"
 	"github.com/spf13/pflag"
+
+	"github.com/powerman/go-service-example/pkg/def"
+	"github.com/powerman/go-service-example/pkg/netx"
 )
 
 // MustGetServeTest returns config suitable for use in tests.

@@ -10,13 +10,14 @@ import (
 	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/powerman/structlog"
+	"github.com/sebest/xff"
+
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/api/openapi/restapi/op"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
-	"github.com/powerman/structlog"
-	"github.com/sebest/xff"
 )
 
 type (

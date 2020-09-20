@@ -4,6 +4,10 @@ import (
 	"context"
 	"regexp"
 
+	"github.com/powerman/structlog"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/spf13/cobra"
+
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/config"
@@ -14,9 +18,6 @@ import (
 	"github.com/powerman/go-service-example/pkg/concurrent"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/serve"
-	"github.com/powerman/structlog"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/spf13/cobra"
 )
 
 // Ctx is a synonym for convenience.

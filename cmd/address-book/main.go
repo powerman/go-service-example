@@ -11,10 +11,11 @@ import (
 	"time"
 
 	"github.com/powerman/appcfg"
-	"github.com/powerman/go-service-example/pkg/cobrax"
-	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/structlog"
 	"github.com/spf13/cobra"
+
+	"github.com/powerman/go-service-example/pkg/cobrax"
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 //nolint:gochecknoglobals // Main.

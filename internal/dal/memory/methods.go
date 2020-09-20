@@ -1,8 +1,9 @@
 package dal
 
 import (
-	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/structlog"
+
+	"github.com/powerman/go-service-example/internal/app"
 )
 
 func (r *Repo) AddContact(ctx Ctx, name string) (id int, err error) {

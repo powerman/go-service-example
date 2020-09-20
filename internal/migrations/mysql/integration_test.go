@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
+
 	"github.com/powerman/go-service-example/internal/config"
 	migrations "github.com/powerman/go-service-example/internal/migrations/mysql"
 	"github.com/powerman/go-service-example/pkg/def"

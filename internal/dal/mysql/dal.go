@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+
 	"github.com/powerman/go-service-example/internal/app"
 	migrations "github.com/powerman/go-service-example/internal/migrations/mysql"
 	"github.com/powerman/go-service-example/pkg/repo"

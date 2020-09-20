@@ -9,12 +9,13 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
+	"github.com/powerman/mysqlx"
+	"github.com/prometheus/client_golang/prometheus"
+
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/config"
 	dal "github.com/powerman/go-service-example/internal/dal/mysql"
 	"github.com/powerman/go-service-example/pkg/def"
-	"github.com/powerman/mysqlx"
-	"github.com/prometheus/client_golang/prometheus"
 )
 
 func TestMain(m *testing.M) {

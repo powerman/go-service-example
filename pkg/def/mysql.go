@@ -2,6 +2,7 @@ package def
 
 import (
 	"github.com/go-sql-driver/mysql"
+
 	"github.com/powerman/go-service-example/pkg/netx"
 )
 

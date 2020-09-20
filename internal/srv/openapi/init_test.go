@@ -12,15 +12,16 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
+	"github.com/powerman/structlog"
+	"github.com/prometheus/client_golang/prometheus"
+	_ "github.com/smartystreets/goconvey/convey"
+
 	"github.com/powerman/go-service-example/api/openapi/client"
 	"github.com/powerman/go-service-example/api/openapi/model"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
-	"github.com/powerman/structlog"
-	"github.com/prometheus/client_golang/prometheus"
-	_ "github.com/smartystreets/goconvey/convey"
 )
 
 func TestMain(m *testing.M) {
