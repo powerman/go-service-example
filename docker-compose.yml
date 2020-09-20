@@ -1,6 +1,20 @@
 version: "3.8"
 
+volumes:
+  mysql:
+
 services:
+
+  mysql:
+    image: "mysql:5.6"
+    container_name: example_mysql
+    restart: always
+    ports:
+      - "${example_mysql_addr_port:-0}:3306"
+    volumes:
+      - "mysql:/var/lib/mysql"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
 
   address-book:
     build:
@@ -14,3 +28,6 @@ services:
       - "${EXAMPLE_METRICS_ADDR_PORT:-0}:9000"
     environment:
       EXAMPLE_APIKEY_ADMIN: "${EXAMPLE_APIKEY_ADMIN:?}"
+      EXAMPLE_MYSQL_ADDR_HOST: "mysql"
+      EXAMPLE_MYSQL_AUTH_LOGIN: "root"
+      EXAMPLE_MYSQL_AUTH_PASS: ""

@@ -13,7 +13,8 @@ import (
 var (
 	testAll      = all
 	testFlagsets = FlagSets{
-		Serve: pflag.NewFlagSet("", 0),
+		Serve:      pflag.NewFlagSet("", 0),
+		GooseMySQL: pflag.NewFlagSet("", 0),
 	}
 )
 

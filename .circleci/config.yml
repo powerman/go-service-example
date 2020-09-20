@@ -7,6 +7,7 @@ setup_env: &setup_env
     command: |
       env | sort > /tmp/env.old
 
+      export DOCKERIZE_VER=0.12.0
       export HADOLINT_VER=1.18.0
       export SHELLCHECK_VER=0.7.1
       export GOLANGCI_LINT_VER=1.31.0
@@ -32,6 +33,13 @@ jobs:
         environment:
           GOFLAGS: "-mod=readonly"
           EXAMPLE_APIKEY_ADMIN: "admin"
+          EXAMPLE_MYSQL_ADDR_HOST: "localhost"
+          EXAMPLE_MYSQL_AUTH_LOGIN: "root"
+          EXAMPLE_MYSQL_AUTH_PASS: ""
+          NARADA4D_TEST_MYSQL: "goose-mysql://root@127.0.0.1"
+      - image: "mysql:5.6"
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     steps:
       - checkout
       - *setup_env
@@ -46,6 +54,8 @@ jobs:
             GO111MODULE: "on"
           command: |
             cd /tmp # Protect go.mod for modifications by `go get`.
+            dockerize --version | tee /dev/stderr | grep -wq v$DOCKERIZE_VER ||
+              curl -sSfL https://github.com/powerman/dockerize/releases/download/v${DOCKERIZE_VER}/dockerize-$(uname)-x86_64 | install /dev/stdin $(go env GOPATH)/bin/dockerize
             hadolint --version | tee /dev/stderr | grep -wq v$HADOLINT_VER ||
               curl -sSfL https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VER}/hadolint-$(uname)-x86_64 | install /dev/stdin $(go env GOPATH)/bin/hadolint
             shellcheck --version | tee /dev/stderr | grep -wq $SHELLCHECK_VER ||

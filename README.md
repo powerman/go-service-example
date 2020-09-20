@@ -271,7 +271,6 @@ $ ./bin/address-book serve
 ## TODO
 
 - [ ] Update JSON Schema support cheatsheet to latest go-swagger version.
-- [ ] Replace trivial in-memory DAL with more complete one based on
-  Postgresql with metrics and migrations support.
+- [ ] Add alternative DAL implementation for Postgresql.
 - [ ] Add cookie-based auth with CSRF middleware.
 - [ ] Add an example of adapter for external service in `svc/something`.

@@ -13,4 +13,8 @@ mod="$(go list -m)"
 
 golangci-lint run
 
+if which dockerize &>/dev/null; then
+	dockerize -timeout 30s -wait "tcp://${EXAMPLE_MYSQL_ADDR_HOST}:${EXAMPLE_MYSQL_ADDR_PORT:-3306}"
+fi
+
 gotestsum -- -race -tags=integration "$@" ./...

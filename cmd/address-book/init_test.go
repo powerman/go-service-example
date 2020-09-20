@@ -10,6 +10,7 @@ import (
 	"github.com/powerman/go-service-example/api/openapi/model"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/config"
+	dal "github.com/powerman/go-service-example/internal/dal/mysql"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/def"
 )
@@ -17,6 +18,7 @@ import (
 func TestMain(m *testing.M) {
 	def.Init()
 	initMetrics(reg, "test")
+	dal.InitMetrics(reg, "test")
 	app.InitMetrics(reg)
 	openapi.InitMetrics(reg, "test")
 	cfg = config.MustGetServeTest()
@@ -32,3 +34,7 @@ var (
 	apiKeyUser  = oapiclient.APIKeyAuth("API-Key", "header", "user")
 	apiContact1 = &model.Contact{ID: 1, Name: swag.String("A")}
 )
+
+type tLogger check.C
+
+func (t tLogger) Print(args ...interface{}) { t.Log(args...) }

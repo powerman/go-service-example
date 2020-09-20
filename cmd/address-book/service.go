@@ -7,8 +7,10 @@ import (
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/internal/config"
-	dal "github.com/powerman/go-service-example/internal/dal/memory"
+	dal "github.com/powerman/go-service-example/internal/dal/mysql"
+	migrations_mysql "github.com/powerman/go-service-example/internal/migrations/mysql"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
+	"github.com/powerman/go-service-example/pkg/cobrax"
 	"github.com/powerman/go-service-example/pkg/concurrent"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/serve"
@@ -29,14 +31,19 @@ type service struct {
 	srv  *restapi.Server
 }
 
-func initService(_, serveCmd *cobra.Command) error {
+func initService(cmd, serveCmd *cobra.Command) error {
 	namespace := regexp.MustCompile(`[^a-zA-Z0-9]+`).ReplaceAllString(def.ProgName, "_")
 	initMetrics(reg, namespace)
+	dal.InitMetrics(reg, namespace)
 	app.InitMetrics(reg)
 	openapi.InitMetrics(reg, namespace)
 
+	gooseMySQLCmd := cobrax.NewGooseMySQLCmd(migrations_mysql.Goose(), config.GetGooseMySQL)
+	cmd.AddCommand(gooseMySQLCmd)
+
 	return config.Init(config.FlagSets{
-		Serve: serveCmd.Flags(),
+		Serve:      serveCmd.Flags(),
+		GooseMySQL: gooseMySQLCmd.Flags(),
 	})
 }
 
@@ -78,7 +85,7 @@ func (s *service) runServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err er
 }
 
 func (s *service) connectRepo(ctx Ctx) (interface{}, error) {
-	return dal.New(ctx)
+	return dal.New(ctx, s.cfg.MySQLGooseDir, s.cfg.MySQL)
 }
 
 func (s *service) serveMetrics(ctx Ctx) error {
