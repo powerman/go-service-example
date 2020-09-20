@@ -5,27 +5,37 @@ import (
 	"github.com/powerman/structlog"
 )
 
-func (r *Repo) Contacts(_ Ctx) ([]app.Contact, error) {
-	r.Lock()
-	defer r.Unlock() //nolint:gocritic // False positive (unnecessaryDefer).
-
-	return r.db, nil
-}
-
-func (r *Repo) AddContact(ctx Ctx, c *app.Contact) error {
+func (r *Repo) AddContact(ctx Ctx, name string) (id int, err error) {
 	log := structlog.FromContext(ctx, nil)
 	r.Lock()
 	defer r.Unlock()
 
+	r.lastID++
+
 	for i := range r.db {
-		if r.db[i].Name == c.Name {
-			return app.ErrContactExists
+		if r.db[i].Name == name {
+			return 0, app.ErrContactExists
 		}
 	}
 
-	r.lastID++
-	c.ID = r.lastID
-	r.db = append(r.db, *c)
+	id = r.lastID
+	r.db = append(r.db, app.Contact{ID: id, Name: name})
 	log.Debug("contact added")
-	return nil
+	return id, nil
+}
+
+func (r *Repo) LstContacts(ctx Ctx, page app.SeekPage) ([]app.Contact, error) {
+	r.Lock()
+	defer r.Unlock()
+
+	contacts := make([]app.Contact, 0, page.Limit)
+	for i := range r.db {
+		if len(contacts) >= page.Limit {
+			break
+		}
+		if r.db[i].ID > page.SinceID {
+			contacts = append(contacts, r.db[i])
+		}
+	}
+	return contacts, nil
 }

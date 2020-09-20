@@ -19,7 +19,7 @@ import (
 // NewListContactsParams creates a new ListContactsParams object
 // with the default values initialized.
 func NewListContactsParams() *ListContactsParams {
-
+	var ()
 	return &ListContactsParams{
 
 		timeout: cr.DefaultTimeout,
@@ -29,7 +29,7 @@ func NewListContactsParams() *ListContactsParams {
 // NewListContactsParamsWithTimeout creates a new ListContactsParams object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewListContactsParamsWithTimeout(timeout time.Duration) *ListContactsParams {
-
+	var ()
 	return &ListContactsParams{
 
 		timeout: timeout,
@@ -39,7 +39,7 @@ func NewListContactsParamsWithTimeout(timeout time.Duration) *ListContactsParams
 // NewListContactsParamsWithContext creates a new ListContactsParams object
 // with the default values initialized, and the ability to set a context for a request
 func NewListContactsParamsWithContext(ctx context.Context) *ListContactsParams {
-
+	var ()
 	return &ListContactsParams{
 
 		Context: ctx,
@@ -49,7 +49,7 @@ func NewListContactsParamsWithContext(ctx context.Context) *ListContactsParams {
 // NewListContactsParamsWithHTTPClient creates a new ListContactsParams object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewListContactsParamsWithHTTPClient(client *http.Client) *ListContactsParams {
-
+	var ()
 	return &ListContactsParams{
 		HTTPClient: client,
 	}
@@ -59,6 +59,10 @@ func NewListContactsParamsWithHTTPClient(client *http.Client) *ListContactsParam
 for the list contacts operation typically these are written to a http.Request
 */
 type ListContactsParams struct {
+
+	/*Args*/
+	Args ListContactsBody
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -97,6 +101,17 @@ func (o *ListContactsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithArgs adds the args to the list contacts params
+func (o *ListContactsParams) WithArgs(args ListContactsBody) *ListContactsParams {
+	o.SetArgs(args)
+	return o
+}
+
+// SetArgs adds the args to the list contacts params
+func (o *ListContactsParams) SetArgs(args ListContactsBody) {
+	o.Args = args
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *ListContactsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -104,6 +119,10 @@ func (o *ListContactsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
+
+	if err := r.SetBodyParam(o.Args); err != nil {
+		return err
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

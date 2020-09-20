@@ -102,7 +102,7 @@ func (a *Client) HealthCheck(params *HealthCheckParams) (*HealthCheckOK, error) 
 }
 
 /*
-  ListContacts Return all contacts ordered by ID.
+  ListContacts Return all contacts ordered by ID ASC using pagination.
 */
 func (a *Client) ListContacts(params *ListContactsParams, authInfo runtime.ClientAuthInfoWriter) (*ListContactsOK, error) {
 	// TODO: Validate the params before sending

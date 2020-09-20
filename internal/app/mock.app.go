@@ -48,18 +48,18 @@ func (mr *MockApplMockRecorder) HealthCheck(arg0 interface{}) *gomock.Call {
 }
 
 // Contacts mocks base method
-func (m *MockAppl) Contacts(arg0 Ctx, arg1 Auth) ([]Contact, error) {
+func (m *MockAppl) Contacts(arg0 Ctx, arg1 Auth, arg2 SeekPage) ([]Contact, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Contacts", arg0, arg1)
+	ret := m.ctrl.Call(m, "Contacts", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]Contact)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Contacts indicates an expected call of Contacts
-func (mr *MockApplMockRecorder) Contacts(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockApplMockRecorder) Contacts(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Contacts", reflect.TypeOf((*MockAppl)(nil).Contacts), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Contacts", reflect.TypeOf((*MockAppl)(nil).Contacts), arg0, arg1, arg2)
 }
 
 // AddContact mocks base method
@@ -100,31 +100,32 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
 }
 
-// Contacts mocks base method
-func (m *MockRepo) Contacts(arg0 Ctx) ([]Contact, error) {
+// LstContacts mocks base method
+func (m *MockRepo) LstContacts(arg0 Ctx, arg1 SeekPage) ([]Contact, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Contacts", arg0)
+	ret := m.ctrl.Call(m, "LstContacts", arg0, arg1)
 	ret0, _ := ret[0].([]Contact)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Contacts indicates an expected call of Contacts
-func (mr *MockRepoMockRecorder) Contacts(arg0 interface{}) *gomock.Call {
+// LstContacts indicates an expected call of LstContacts
+func (mr *MockRepoMockRecorder) LstContacts(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Contacts", reflect.TypeOf((*MockRepo)(nil).Contacts), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LstContacts", reflect.TypeOf((*MockRepo)(nil).LstContacts), arg0, arg1)
 }
 
 // AddContact mocks base method
-func (m *MockRepo) AddContact(arg0 Ctx, arg1 *Contact) error {
+func (m *MockRepo) AddContact(arg0 Ctx, name string) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddContact", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "AddContact", arg0, name)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // AddContact indicates an expected call of AddContact
-func (mr *MockRepoMockRecorder) AddContact(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockRepoMockRecorder) AddContact(arg0, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddContact", reflect.TypeOf((*MockRepo)(nil).AddContact), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddContact", reflect.TypeOf((*MockRepo)(nil).AddContact), arg0, name)
 }

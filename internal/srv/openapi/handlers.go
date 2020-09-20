@@ -20,7 +20,7 @@ func (srv *server) HealthCheck(params op.HealthCheckParams) op.HealthCheckRespon
 
 func (srv *server) ListContacts(params op.ListContactsParams, auth *app.Auth) op.ListContactsResponder {
 	ctx, log := fromRequest(params.HTTPRequest, auth)
-	cs, err := srv.app.Contacts(ctx, *auth)
+	cs, err := srv.app.Contacts(ctx, *auth, appSeekPage(params.Args.SeekPagination))
 	switch {
 	default:
 		return errListContacts(log, err, codeInternal)

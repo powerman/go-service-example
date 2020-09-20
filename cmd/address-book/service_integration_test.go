@@ -6,6 +6,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/go-openapi/swag"
 	"github.com/powerman/check"
 	"github.com/powerman/go-service-example/api/openapi/client"
 	"github.com/powerman/go-service-example/api/openapi/client/op"
@@ -50,7 +51,11 @@ func TestSmoke(tt *testing.T) {
 		t.DeepEqual(res, &op.AddContactCreated{Payload: apiContact1})
 	}
 	{
-		res, err := openapiClient.Op.ListContacts(op.NewListContactsParams(), apiKeyAdmin)
+		args := op.ListContactsBody{SeekPagination: model.SeekPagination{
+			SinceID: swag.Int32(0),
+			Limit:   swag.Int32(2),
+		}}
+		res, err := openapiClient.Op.ListContacts(op.NewListContactsParams().WithArgs(args), apiKeyAdmin)
 		t.Nil(openapi.ErrPayload(err))
 		t.DeepEqual(res, &op.ListContactsOK{Payload: []*model.Contact{apiContact1}})
 	}

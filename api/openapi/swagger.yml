@@ -36,6 +36,25 @@ definitions:
       message:
         type: string
 
+  SeekPagination:
+    type: object
+    description: Query paginated list starting with a specific item.
+    required:
+      - since_id
+      - limit
+    properties:
+      since_id:
+        description: Include items with ID greater than since_id.
+        type: integer
+        format: int32
+        minimum: 0
+      limit:
+        description: Maximum amount of items to return.
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+
   Contact:
     type: object
     required:
@@ -79,7 +98,14 @@ paths:
   /contacts:
     get:
       operationId: listContacts
-      description: Return all contacts ordered by ID.
+      description: Return all contacts ordered by ID ASC using pagination.
+      parameters:
+        - name: args
+          required: true
+          in: body
+          schema:
+            allOf:
+              - $ref: '#/definitions/SeekPagination'
       responses:
         '200':
           description: OK
