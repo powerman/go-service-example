@@ -8,7 +8,9 @@
 package config
 
 import (
+	"github.com/go-sql-driver/mysql"
 	"github.com/powerman/appcfg"
+	"github.com/powerman/go-service-example/pkg/cobrax"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
 	"github.com/spf13/pflag"
@@ -26,15 +28,26 @@ var all = &struct { //nolint:gochecknoglobals // Config is global anyway.
 	AddrHost        appcfg.NotEmptyString `env:"ADDR_HOST"`
 	AddrPort        appcfg.Port           `env:"ADDR_PORT"`
 	MetricsAddrPort appcfg.Port           `env:"METRICS_ADDR_PORT"`
+	MySQLAddrHost   appcfg.NotEmptyString `env:"MYSQL_ADDR_HOST"`
+	MySQLAddrPort   appcfg.Port           `env:"MYSQL_ADDR_PORT"`
+	MySQLAuthLogin  appcfg.NotEmptyString `env:"MYSQL_AUTH_LOGIN"`
+	MySQLAuthPass   appcfg.String         `env:"MYSQL_AUTH_PASS"`
+	MySQLDBName     appcfg.NotEmptyString `env:"MYSQL_DB"`
+	MySQLGooseDir   appcfg.NotEmptyString
 }{ // Defaults, if any:
 	AddrHost:        appcfg.MustNotEmptyString(def.Hostname),
 	AddrPort:        appcfg.MustPort("8000"),
 	MetricsAddrPort: appcfg.MustPort("9000"),
+	MySQLAddrPort:   appcfg.MustPort("3306"),
+	MySQLAuthLogin:  appcfg.MustNotEmptyString(def.ProgName),
+	MySQLDBName:     appcfg.MustNotEmptyString(def.ProgName),
+	MySQLGooseDir:   appcfg.MustNotEmptyString("internal/migrations/mysql"),
 }
 
 // FlagSets for all CLI subcommands which use flags to set config values.
 type FlagSets struct {
-	Serve *pflag.FlagSet
+	Serve      *pflag.FlagSet
+	GooseMySQL *pflag.FlagSet
 }
 
 var fs FlagSets //nolint:gochecknoglobals // Flags are global anyway.
@@ -54,15 +67,28 @@ func Init(flagsets FlagSets) error {
 	appcfg.AddPFlag(fs.Serve, &all.AddrHost, "host", "host to serve OpenAPI")
 	appcfg.AddPFlag(fs.Serve, &all.AddrPort, "port", "port to serve OpenAPI")
 	appcfg.AddPFlag(fs.Serve, &all.MetricsAddrPort, "metrics.port", "port to serve Prometheus metrics")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAddrHost, "mysql.host", "host to connect to MySQL")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAddrPort, "mysql.port", "port to connect to MySQL")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAuthLogin, "mysql.user", "MySQL username")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAuthPass, "mysql.pass", "MySQL password")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLDBName, "mysql.dbname", "MySQL database name")
+
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAddrHost, "mysql.host", "host to connect to MySQL")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAddrPort, "mysql.port", "port to connect to MySQL")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAuthLogin, "mysql.user", "MySQL username")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAuthPass, "mysql.pass", "MySQL password")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLDBName, "mysql.dbname", "MySQL database name")
 
 	return nil
 }
 
 // ServeConfig contains configuration for subcommand.
 type ServeConfig struct {
-	APIKeyAdmin string
-	Addr        netx.Addr
-	MetricsAddr netx.Addr
+	APIKeyAdmin   string
+	Addr          netx.Addr
+	MetricsAddr   netx.Addr
+	MySQL         *mysql.Config
+	MySQLGooseDir string
 }
 
 // GetServe validates and returns configuration for subcommand.
@@ -73,9 +99,34 @@ func GetServe() (c *ServeConfig, err error) {
 		APIKeyAdmin: all.APIKeyAdmin.Value(&err),
 		Addr:        netx.NewAddr(all.AddrHost.Value(&err), all.AddrPort.Value(&err)),
 		MetricsAddr: netx.NewAddr(all.AddrHost.Value(&err), all.MetricsAddrPort.Value(&err)),
+		MySQL: def.NewMySQLConfig(def.MySQLConfig{
+			Addr: netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
+			User: all.MySQLAuthLogin.Value(&err),
+			Pass: all.MySQLAuthPass.Value(&err),
+			DB:   all.MySQLDBName.Value(&err),
+		}),
+		MySQLGooseDir: all.MySQLGooseDir.Value(&err),
 	}
 	if err != nil {
 		return nil, appcfg.WrapPErr(err, fs.Serve, all)
+	}
+	return c, nil
+}
+
+func GetGooseMySQL() (c *cobrax.GooseMySQLConfig, err error) {
+	defer cleanup()
+
+	c = &cobrax.GooseMySQLConfig{
+		MySQL: def.NewMySQLConfig(def.MySQLConfig{
+			Addr: netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
+			User: all.MySQLAuthLogin.Value(&err),
+			Pass: all.MySQLAuthPass.Value(&err),
+			DB:   all.MySQLDBName.Value(&err),
+		}),
+		MySQLGooseDir: all.MySQLGooseDir.Value(&err),
+	}
+	if err != nil {
+		return nil, appcfg.WrapPErr(err, fs.GooseMySQL, all)
 	}
 	return c, nil
 }

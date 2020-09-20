@@ -41,6 +41,7 @@ run:
   # on Windows.
   skip-files:
     - "\\.[\\w-]+\\.go$"
+    - "/migrations/(.*/)?[0-9]{5}_"
 
   # by default isn't set. If set we pass it to "go list -mod={option}". From "go help modules":
   # If invoked with -mod=readonly, the go command is disallowed from the implicit

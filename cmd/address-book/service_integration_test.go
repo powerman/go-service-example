@@ -14,10 +14,16 @@ import (
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
+	"github.com/powerman/mysqlx"
 )
 
 func TestSmoke(tt *testing.T) {
 	t := check.T(tt)
+
+	tempDBCfg, cleanup, err := mysqlx.EnsureTempDB(tLogger(*t), "", cfg.MySQL)
+	cfg.MySQL = tempDBCfg
+	t.Must(t.Nil(err))
+	defer cleanup()
 
 	s := &service{cfg: cfg}
 
@@ -29,6 +35,9 @@ func TestSmoke(tt *testing.T) {
 	defer func() {
 		shutdown()
 		t.Nil(<-errc, "RunServe")
+		if s.repo != nil {
+			s.repo.Close()
+		}
 	}()
 	t.Must(t.Nil(netx.WaitTCPPort(ctxStartup, cfg.Addr), "connect to service"))
 

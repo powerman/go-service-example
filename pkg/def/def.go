@@ -6,8 +6,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/powerman/getenv"
 	"github.com/powerman/must"
+	"github.com/powerman/sqlxx"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -25,6 +27,8 @@ func Init() error {
 	prometheus.DefaultGatherer = nil
 
 	must.AbortIf = must.PanicIf
+
+	sqlx.NameMapper = sqlxx.ToSnake
 
 	setupLog()
 
