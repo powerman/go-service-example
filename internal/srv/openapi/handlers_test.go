@@ -55,25 +55,34 @@ func TestListContacts(tt *testing.T) {
 	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
 	defer cleanup()
 
-	mockApp.EXPECT().Contacts(gomock.Any(), authUser).Return(nil, io.EOF)
-	mockApp.EXPECT().Contacts(gomock.Any(), authUser).Return(nil, nil)
-	mockApp.EXPECT().Contacts(gomock.Any(), authAdmin).Return([]app.Contact{appContact1, appContact2}, nil)
+	var (
+		apiPage1 = model.SeekPagination{SinceID: swag.Int32(0), Limit: swag.Int32(2)}
+		apiPage2 = model.SeekPagination{SinceID: swag.Int32(2), Limit: swag.Int32(2)}
+		appPage1 = app.SeekPage{SinceID: 0, Limit: 2}
+		appPage2 = app.SeekPage{SinceID: 2, Limit: 2}
+	)
+
+	mockApp.EXPECT().Contacts(gomock.Any(), authUser, appPage1).Return(nil, io.EOF)
+	mockApp.EXPECT().Contacts(gomock.Any(), authUser, appPage2).Return(nil, nil)
+	mockApp.EXPECT().Contacts(gomock.Any(), authAdmin, appPage1).Return([]app.Contact{appContact1, appContact2}, nil)
 
 	testCases := []struct {
 		apiKey  runtime.ClientAuthInfoWriter
+		page    model.SeekPagination
 		want    interface{}
 		wantErr *model.Error
 	}{
-		{nil, nil, apiError401},
-		{apiKeyUser, nil, apiError500},
-		{apiKeyUser, []*model.Contact{}, nil},
-		{apiKeyAdmin, []*model.Contact{apiContact1, apiContact2}, nil},
+		{nil, apiPage1, nil, apiError401},
+		{apiKeyUser, apiPage1, nil, apiError500},
+		{apiKeyUser, apiPage2, []*model.Contact{}, nil},
+		{apiKeyAdmin, apiPage1, []*model.Contact{apiContact1, apiContact2}, nil},
 	}
 	for _, tc := range testCases {
 		tc := tc
 		t.Run("", func(tt *testing.T) {
 			t := check.T(tt)
-			res, err := c.Op.ListContacts(op.NewListContactsParams(), tc.apiKey)
+			args := op.ListContactsBody{SeekPagination: tc.page}
+			res, err := c.Op.ListContacts(op.NewListContactsParams().WithArgs(args), tc.apiKey)
 			t.DeepEqual(openapi.ErrPayload(err), tc.wantErr)
 			if res == nil {
 				t.DeepEqual(nil, tc.want)

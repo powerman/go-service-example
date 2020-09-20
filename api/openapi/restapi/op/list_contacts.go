@@ -8,8 +8,12 @@ package op
 import (
 	"net/http"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 
+	"github.com/powerman/go-service-example/api/openapi/model"
 	"github.com/powerman/go-service-example/internal/app"
 )
 
@@ -33,7 +37,7 @@ func NewListContacts(ctx *middleware.Context, handler ListContactsHandler) *List
 
 /*ListContacts swagger:route GET /contacts listContacts
 
-Return all contacts ordered by ID.
+Return all contacts ordered by ID ASC using pagination.
 
 */
 type ListContacts struct {
@@ -70,4 +74,68 @@ func (o *ListContacts) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
+}
+
+// ListContactsBody list contacts body
+//
+// swagger:model ListContactsBody
+type ListContactsBody struct {
+	model.SeekPagination
+}
+
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (o *ListContactsBody) UnmarshalJSON(raw []byte) error {
+	// ListContactsParamsBodyAO0
+	var listContactsParamsBodyAO0 model.SeekPagination
+	if err := swag.ReadJSON(raw, &listContactsParamsBodyAO0); err != nil {
+		return err
+	}
+	o.SeekPagination = listContactsParamsBodyAO0
+
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (o ListContactsBody) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 1)
+
+	listContactsParamsBodyAO0, err := swag.WriteJSON(o.SeekPagination)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, listContactsParamsBodyAO0)
+	return swag.ConcatJSON(_parts...), nil
+}
+
+// Validate validates this list contacts body
+func (o *ListContactsBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with model.SeekPagination
+	if err := o.SeekPagination.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *ListContactsBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *ListContactsBody) UnmarshalBinary(b []byte) error {
+	var res ListContactsBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
 }

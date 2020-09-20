@@ -37,8 +37,22 @@ func init() {
   "paths": {
     "/contacts": {
       "get": {
-        "description": "Return all contacts ordered by ID.",
+        "description": "Return all contacts ordered by ID ASC using pagination.",
         "operationId": "listContacts",
+        "parameters": [
+          {
+            "name": "args",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/SeekPagination"
+                }
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -139,6 +153,30 @@ func init() {
         "message": {
           "type": "string",
           "x-order": 1
+        }
+      }
+    },
+    "SeekPagination": {
+      "description": "Query paginated list starting with a specific item.",
+      "type": "object",
+      "required": [
+        "since_id",
+        "limit"
+      ],
+      "properties": {
+        "limit": {
+          "description": "Maximum amount of items to return.",
+          "type": "integer",
+          "format": "int32",
+          "maximum": 100,
+          "minimum": 1,
+          "x-order": 1
+        },
+        "since_id": {
+          "description": "Include items with ID greater than since_id.",
+          "type": "integer",
+          "format": "int32",
+          "x-order": 0
         }
       }
     }
@@ -184,8 +222,22 @@ func init() {
   "paths": {
     "/contacts": {
       "get": {
-        "description": "Return all contacts ordered by ID.",
+        "description": "Return all contacts ordered by ID ASC using pagination.",
         "operationId": "listContacts",
+        "parameters": [
+          {
+            "name": "args",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/SeekPagination"
+                }
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -292,6 +344,31 @@ func init() {
         "message": {
           "type": "string",
           "x-order": 1
+        }
+      }
+    },
+    "SeekPagination": {
+      "description": "Query paginated list starting with a specific item.",
+      "type": "object",
+      "required": [
+        "since_id",
+        "limit"
+      ],
+      "properties": {
+        "limit": {
+          "description": "Maximum amount of items to return.",
+          "type": "integer",
+          "format": "int32",
+          "maximum": 100,
+          "minimum": 1,
+          "x-order": 1
+        },
+        "since_id": {
+          "description": "Include items with ID greater than since_id.",
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "x-order": 0
         }
       }
     }

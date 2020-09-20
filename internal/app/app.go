@@ -24,7 +24,7 @@ type Appl interface {
 	HealthCheck(Ctx) (interface{}, error)
 	// Contacts returns all contacts.
 	// Errors: none.
-	Contacts(Ctx, Auth) ([]Contact, error)
+	Contacts(Ctx, Auth, SeekPage) ([]Contact, error)
 	// AddContact adds new contact.
 	// Errors: ErrContactExists.
 	AddContact(_ Ctx, _ Auth, name string) (*Contact, error)
@@ -32,18 +32,24 @@ type Appl interface {
 
 // Repo provides data storage.
 type Repo interface {
-	// Contacts returns all contacts.
+	// LstContacts returns up to limit contacts with ID > sinceID,
+	// ordered by ID.
 	// Errors: none.
-	Contacts(Ctx) ([]Contact, error)
-	// AddContact adds new contact and set ID.
+	LstContacts(Ctx, SeekPage) ([]Contact, error)
+	// AddContact adds new contact and returns it ID.
 	// Errors: ErrContactExists.
-	AddContact(Ctx, *Contact) error
+	AddContact(_ Ctx, name string) (id int, err error)
 }
 
 type (
 	// Auth describes authentication.
 	Auth struct {
 		UserID string
+	}
+	// SeekPage describes seek pagination.
+	SeekPage struct {
+		SinceID int
+		Limit   int
 	}
 	// Contact describes record in address book.
 	Contact struct {

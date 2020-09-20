@@ -14,20 +14,22 @@ func TestContacts(tt *testing.T) {
 	defer cleanup()
 
 	var (
-		c1 = app.Contact{ID: 1, Name: "A"}
-		c2 = app.Contact{ID: 2, Name: "B"}
+		c1    = app.Contact{ID: 1, Name: "A"}
+		c2    = app.Contact{ID: 2, Name: "B"}
+		page1 = app.SeekPage{SinceID: 0, Limit: 2}
+		page2 = app.SeekPage{SinceID: 2, Limit: 2}
 	)
 
-	mockRepo.EXPECT().Contacts(gomock.Any()).Return(nil, nil)
-	mockRepo.EXPECT().Contacts(gomock.Any()).Return([]app.Contact{c1, c2}, nil)
+	mockRepo.EXPECT().LstContacts(gomock.Any(), page1).Return([]app.Contact{c1, c2}, nil)
+	mockRepo.EXPECT().LstContacts(gomock.Any(), page2).Return(nil, nil)
 
-	db, err := a.Contacts(ctx, auth1)
-	t.Nil(err)
-	t.Zero(db)
-
-	db, err = a.Contacts(ctx, auth1)
+	db, err := a.Contacts(ctx, auth1, page1)
 	t.Nil(err)
 	t.Len(db, 2)
+
+	db, err = a.Contacts(ctx, auth1, page2)
+	t.Nil(err)
+	t.Zero(db)
 }
 
 func TestAddContact(tt *testing.T) {
@@ -37,11 +39,8 @@ func TestAddContact(tt *testing.T) {
 
 	c1 := app.Contact{Name: "A"}
 
-	mockRepo.EXPECT().AddContact(gomock.Any(), &c1).DoAndReturn(func(_ Ctx, c *app.Contact) error {
-		c.ID = 1
-		return nil
-	})
-	mockRepo.EXPECT().AddContact(gomock.Any(), &c1).Return(app.ErrContactExists)
+	mockRepo.EXPECT().AddContact(gomock.Any(), c1.Name).Return(1, nil)
+	mockRepo.EXPECT().AddContact(gomock.Any(), c1.Name).Return(0, app.ErrContactExists)
 
 	c, err := a.AddContact(ctx, auth1, c1.Name)
 	t.Nil(err)

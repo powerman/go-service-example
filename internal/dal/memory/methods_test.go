@@ -10,29 +10,58 @@ import (
 
 func TestContacts(tt *testing.T) {
 	t := check.T(tt)
+	t.Parallel()
 	r, err := dal.New(ctx)
 	t.Nil(err)
 
-	db, err := r.Contacts(ctx)
-	t.Nil(err)
-	t.Zero(db)
+	var (
+		c1 = app.Contact{ID: 1, Name: "A"}
+		c3 = app.Contact{ID: 3, Name: "B"}
+		c4 = app.Contact{ID: 4, Name: "C"}
+	)
 
-	c := &app.Contact{Name: "A"}
-	err = r.AddContact(ctx, c)
+	contacts, err := r.LstContacts(ctx, app.SeekPage{SinceID: 0, Limit: 2})
 	t.Nil(err)
-	t.Equal(c.ID, 1)
+	t.Len(contacts, 0)
 
-	c = &app.Contact{Name: "A"}
-	err = r.AddContact(ctx, c)
-	t.Err(err, app.ErrContactExists)
-	t.Zero(c.ID)
+	testsAdd := []struct {
+		name    string
+		want    int
+		wantErr error
+	}{
+		{c1.Name, c1.ID, nil},
+		{c1.Name, 0, app.ErrContactExists},
+		{c3.Name, c3.ID, nil},
+		{c4.Name, c4.ID, nil},
+	}
+	for _, tc := range testsAdd {
+		tc := tc
+		t.Run("", func(tt *testing.T) {
+			t := check.T(tt) //nolint:govet // False positive.
+			res, err := r.AddContact(ctx, tc.name)
+			t.Err(err, tc.wantErr)
+			t.Equal(res, tc.want)
+		})
+	}
 
-	c = &app.Contact{Name: "B"}
-	err = r.AddContact(ctx, c)
-	t.Nil(err)
-	t.Equal(c.ID, 2)
-
-	db, err = r.Contacts(ctx)
-	t.Nil(err)
-	t.Len(db, 2)
+	testsLst := []struct {
+		page    app.SeekPage
+		want    []app.Contact
+		wantErr error
+	}{
+		{app.SeekPage{SinceID: 0, Limit: 0}, []app.Contact{}, nil},
+		{app.SeekPage{SinceID: 0, Limit: 2}, []app.Contact{c1, c3}, nil},
+		{app.SeekPage{SinceID: 2, Limit: 5}, []app.Contact{c3, c4}, nil},
+		{app.SeekPage{SinceID: c3.ID, Limit: 2}, []app.Contact{c4}, nil},
+		{app.SeekPage{SinceID: c4.ID, Limit: 2}, []app.Contact{}, nil},
+	}
+	for _, tc := range testsLst {
+		tc := tc
+		t.Run("", func(tt *testing.T) {
+			t := check.T(tt)
+			res, err := r.LstContacts(ctx, tc.page)
+			t.Err(err, tc.wantErr)
+			t.DeepEqual(res, tc.want)
+		})
+	}
 }

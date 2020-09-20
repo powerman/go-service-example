@@ -19,3 +19,10 @@ func apiContacts(vs []app.Contact) []*model.Contact {
 	}
 	return ms
 }
+
+func appSeekPage(m model.SeekPagination) app.SeekPage {
+	return app.SeekPage{
+		SinceID: int(*m.SinceID),
+		Limit:   int(*m.Limit),
+	}
+}
