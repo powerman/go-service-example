@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	oapierrors "github.com/go-openapi/errors"
+
 	"github.com/powerman/go-service-example/internal/app"
 )
 

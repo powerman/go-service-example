@@ -10,10 +10,11 @@ package config
 import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/powerman/appcfg"
+	"github.com/spf13/pflag"
+
 	"github.com/powerman/go-service-example/pkg/cobrax"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
-	"github.com/spf13/pflag"
 )
 
 // EnvPrefix defines common prefix for environment variables.

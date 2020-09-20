@@ -3,8 +3,9 @@ package repo
 import (
 	"time"
 
-	"github.com/powerman/go-service-example/pkg/reflectx"
 	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/powerman/go-service-example/pkg/reflectx"
 )
 
 // Metrics contains general metrics for DAL methods.

@@ -10,12 +10,13 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/powerman/go-service-example/pkg/migrate"
-	"github.com/powerman/go-service-example/pkg/reflectx"
 	goosepkg "github.com/powerman/goose/v2"
 	"github.com/powerman/narada4d/schemaver"
 	"github.com/powerman/sqlxx"
 	"github.com/powerman/structlog"
+
+	"github.com/powerman/go-service-example/pkg/migrate"
+	"github.com/powerman/go-service-example/pkg/reflectx"
 )
 
 // Ctx is a synonym for convenience.

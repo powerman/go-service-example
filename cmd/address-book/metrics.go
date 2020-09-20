@@ -3,8 +3,9 @@ package main
 import (
 	"runtime"
 
-	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/prometheus/client_golang/prometheus"
+
+	"github.com/powerman/go-service-example/pkg/def"
 )
 
 func initMetrics(reg *prometheus.Registry, namespace string) {

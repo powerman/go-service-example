@@ -8,6 +8,7 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/golang/mock/gomock"
 	"github.com/powerman/check"
+
 	"github.com/powerman/go-service-example/api/openapi/client/op"
 	"github.com/powerman/go-service-example/api/openapi/model"
 	"github.com/powerman/go-service-example/internal/app"

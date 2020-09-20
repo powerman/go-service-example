@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/powerman/check"
+
 	"github.com/powerman/go-service-example/internal/app"
 	dal "github.com/powerman/go-service-example/internal/dal/memory"
 )
