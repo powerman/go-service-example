@@ -21,12 +21,12 @@ import (
 func TestSmoke(tt *testing.T) {
 	t := check.T(tt)
 
+	s := &service{cfg: cfg}
+
 	tempDBCfg, cleanup, err := mysqlx.EnsureTempDB(tLogger(*t), "", cfg.MySQL)
-	cfg.MySQL = tempDBCfg
+	cfg.MySQL = tempDBCfg // Assign to cfg and not s.cfg as a reminder: they are the same.
 	t.Must(t.Nil(err))
 	defer cleanup()
-
-	s := &service{cfg: cfg}
 
 	ctxStartup, cancel := context.WithTimeout(ctx, def.TestTimeout)
 	defer cancel()

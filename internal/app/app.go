@@ -58,13 +58,19 @@ type (
 	}
 )
 
+// Config contains configuration for business-logic.
+type Config struct{}
+
 // App implements interface Appl.
 type App struct {
+	cfg  Config
 	repo Repo
 }
 
-func New(repo Repo) *App {
+// New creates and returns new App.
+func New(repo Repo, cfg Config) *App {
 	a := &App{
+		cfg:  cfg,
 		repo: repo,
 	}
 	return a

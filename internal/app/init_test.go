@@ -32,6 +32,6 @@ func testNew(t *check.C) (func(), *app.App, *app.MockRepo) {
 	ctrl := gomock.NewController(t)
 
 	mockRepo := app.NewMockRepo(ctrl)
-	a := app.New(mockRepo)
+	a := app.New(mockRepo, app.Config{})
 	return ctrl.Finish, a, mockRepo
 }

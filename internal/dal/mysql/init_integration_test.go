@@ -27,14 +27,14 @@ func TestMain(m *testing.M) {
 	check.TestMain(m)
 }
 
+type tLogger check.C
+
+func (t tLogger) Print(args ...interface{}) { t.Log(args...) }
+
 var (
 	ctx = context.Background()
 	cfg *config.ServeConfig
 )
-
-type tLogger check.C
-
-func (t tLogger) Print(args ...interface{}) { t.Log(args...) }
 
 func newTestRepo(t *check.C) (cleanup func(), r *dal.Repo) {
 	t.Helper()

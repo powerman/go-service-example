@@ -12,9 +12,6 @@ import (
 
 func Test(t *testing.T) {
 	want := &ServeConfig{
-		APIKeyAdmin: "admin",
-		Addr:        netx.NewAddr(def.Hostname, 8000),
-		MetricsAddr: netx.NewAddr(def.Hostname, 9000),
 		MySQL: def.NewMySQLConfig(def.MySQLConfig{
 			Addr: netx.NewAddr("localhost", 3306),
 			User: "config",
@@ -22,16 +19,19 @@ func Test(t *testing.T) {
 			DB:   "config",
 		}),
 		MySQLGooseDir: "internal/migrations/mysql",
+		Addr:          netx.NewAddr(def.Hostname, 8000),
+		MetricsAddr:   netx.NewAddr(def.Hostname, 9000),
+		APIKeyAdmin:   "admin",
 	}
 
 	t.Run("required", func(tt *testing.T) {
 		t := check.T(tt)
+		require(t, "APIKeyAdmin")
+		os.Setenv("EXAMPLE_APIKEY_ADMIN", "admin")
 		require(t, "MySQLAuthPass")
 		os.Setenv("EXAMPLE_MYSQL_AUTH_PASS", "")
 		require(t, "MySQLAddrHost")
 		os.Setenv("EXAMPLE_MYSQL_ADDR_HOST", "localhost")
-		require(t, "APIKeyAdmin")
-		os.Setenv("EXAMPLE_APIKEY_ADMIN", "admin")
 	})
 	t.Run("default", func(tt *testing.T) {
 		t := check.T(tt)
@@ -61,38 +61,38 @@ func Test(t *testing.T) {
 		os.Setenv("EXAMPLE_MYSQL_DB", "db3")
 		c, err := testGetServe()
 		t.Nil(err)
-		want.APIKeyAdmin = "admin3"
-		want.Addr = netx.NewAddr("localhost3", 8003)
-		want.MetricsAddr = netx.NewAddr("localhost3", 9003)
 		want.MySQL = def.NewMySQLConfig(def.MySQLConfig{
 			Addr: netx.NewAddr("mysql3", 33306),
 			User: "user3",
 			Pass: "pass3",
 			DB:   "db3",
 		})
+		want.Addr = netx.NewAddr("localhost3", 8003)
+		want.MetricsAddr = netx.NewAddr("localhost3", 9003)
+		want.APIKeyAdmin = "admin3"
 		t.DeepEqual(c, want)
 	})
 	t.Run("flag", func(tt *testing.T) {
 		t := check.T(tt)
 		c, err := testGetServe(
-			"--host=localhost4",
-			"--port=8004",
-			"--metrics.port=9004",
 			"--mysql.host=mysql4",
 			"--mysql.port=43306",
 			"--mysql.user=user4",
 			"--mysql.pass=pass4",
 			"--mysql.dbname=db4",
+			"--host=localhost4",
+			"--port=8004",
+			"--metrics.port=9004",
 		)
 		t.Nil(err)
-		want.Addr = netx.NewAddr("localhost4", 8004)
-		want.MetricsAddr = netx.NewAddr("localhost4", 9004)
 		want.MySQL = def.NewMySQLConfig(def.MySQLConfig{
 			Addr: netx.NewAddr("mysql4", 43306),
 			User: "user4",
 			Pass: "pass4",
 			DB:   "db4",
 		})
+		want.Addr = netx.NewAddr("localhost4", 8004)
+		want.MetricsAddr = netx.NewAddr("localhost4", 9004)
 		t.DeepEqual(c, want)
 	})
 	t.Run("cleanup", func(tt *testing.T) {
