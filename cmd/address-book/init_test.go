@@ -26,6 +26,10 @@ func TestMain(m *testing.M) {
 	check.TestMain(m)
 }
 
+type tLogger check.C
+
+func (l tLogger) Print(v ...interface{}) { l.Log(v...) }
+
 // Const shared by tests. Recommended naming scheme: <dataType><Variant>.
 var (
 	cfg         *config.ServeConfig
@@ -35,7 +39,3 @@ var (
 	apiKeyUser  = oapiclient.APIKeyAuth("API-Key", "header", "user")
 	apiContact1 = &model.Contact{ID: 1, Name: swag.String("A")}
 )
-
-type tLogger check.C
-
-func (t tLogger) Print(args ...interface{}) { t.Log(args...) }

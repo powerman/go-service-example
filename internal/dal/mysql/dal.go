@@ -18,6 +18,7 @@ const (
 	dbMaxIdleConns = 5 // A bit more than default (2).
 )
 
+// Ctx is a synonym for convenience.
 type Ctx = context.Context
 
 // Repo provides access to storage.

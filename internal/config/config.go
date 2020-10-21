@@ -85,11 +85,11 @@ func Init(flagsets FlagSets) error {
 
 // ServeConfig contains configuration for subcommand.
 type ServeConfig struct {
-	APIKeyAdmin   string
-	Addr          netx.Addr
-	MetricsAddr   netx.Addr
 	MySQL         *mysql.Config
 	MySQLGooseDir string
+	Addr          netx.Addr
+	MetricsAddr   netx.Addr
+	APIKeyAdmin   string
 }
 
 // GetServe validates and returns configuration for subcommand.
@@ -97,9 +97,6 @@ func GetServe() (c *ServeConfig, err error) {
 	defer cleanup()
 
 	c = &ServeConfig{
-		APIKeyAdmin: all.APIKeyAdmin.Value(&err),
-		Addr:        netx.NewAddr(all.AddrHost.Value(&err), all.AddrPort.Value(&err)),
-		MetricsAddr: netx.NewAddr(all.AddrHost.Value(&err), all.MetricsAddrPort.Value(&err)),
 		MySQL: def.NewMySQLConfig(def.MySQLConfig{
 			Addr: netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
 			User: all.MySQLAuthLogin.Value(&err),
@@ -107,6 +104,9 @@ func GetServe() (c *ServeConfig, err error) {
 			DB:   all.MySQLDBName.Value(&err),
 		}),
 		MySQLGooseDir: all.MySQLGooseDir.Value(&err),
+		Addr:          netx.NewAddr(all.AddrHost.Value(&err), all.AddrPort.Value(&err)),
+		MetricsAddr:   netx.NewAddr(all.AddrHost.Value(&err), all.MetricsAddrPort.Value(&err)),
+		APIKeyAdmin:   all.APIKeyAdmin.Value(&err),
 	}
 	if err != nil {
 		return nil, appcfg.WrapPErr(err, fs.Serve, all)

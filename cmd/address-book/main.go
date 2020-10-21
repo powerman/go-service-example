@@ -27,7 +27,7 @@ var (
 	logLevel = appcfg.MustOneOfString("debug", []string{"debug", "info", "warn", "err"})
 	rootCmd  = &cobra.Command{
 		Use:           def.ProgName,
-		Short:         "Example microservice with OpenAPI",
+		Short:         "Example microservice",
 		Version:       fmt.Sprintf("%s %s", def.Version(), runtime.Version()),
 		SilenceErrors: true,
 		SilenceUsage:  true,

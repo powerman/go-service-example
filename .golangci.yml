@@ -465,6 +465,9 @@ issues:
     - path: ^api/ext- # Not our API, should be documented elsewhere.
       text: 'should have comment'
 
+    - path: ^api/jsonrpc2[^/]*/ # JSON-RPC 2.0 protocol use non-standard style for comments.
+      text: 'Req should be of the form|Resp` should have comment'
+
     # Require access to unexported identifiers from tests.
     - path: ^cmd/|internal/config/
       linters:

@@ -19,7 +19,7 @@ type GooseMySQLConfig struct {
 }
 
 // NewGooseMySQLCmd creates new goose command executed by run.
-func NewGooseMySQLCmd(goose *goosepkg.Instance, getCfg func() (*GooseMySQLConfig, error)) *cobra.Command {
+func NewGooseMySQLCmd(ctx context.Context, goose *goosepkg.Instance, getCfg func() (*GooseMySQLConfig, error)) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "goose-mysql",
 		Short: "Migrate MySQL database schema",
@@ -27,7 +27,6 @@ func NewGooseMySQLCmd(goose *goosepkg.Instance, getCfg func() (*GooseMySQLConfig
 		RunE: func(cmd *cobra.Command, args []string) error {
 			gooseCmd := strings.Join(args, " ")
 
-			ctx := context.Background()
 			cfg, err := getCfg()
 			if err != nil {
 				return fmt.Errorf("failed to get config: %w", err)

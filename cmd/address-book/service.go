@@ -39,7 +39,7 @@ func initService(cmd, serveCmd *cobra.Command) error {
 	app.InitMetrics(reg)
 	openapi.InitMetrics(reg, namespace)
 
-	gooseMySQLCmd := cobrax.NewGooseMySQLCmd(migrations_mysql.Goose(), config.GetGooseMySQL)
+	gooseMySQLCmd := cobrax.NewGooseMySQLCmd(context.Background(), migrations_mysql.Goose(), config.GetGooseMySQL)
 	cmd.AddCommand(gooseMySQLCmd)
 
 	return config.Init(config.FlagSets{
@@ -65,7 +65,7 @@ func (s *service) runServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err er
 	}
 
 	if s.appl == nil {
-		s.appl = app.New(s.repo)
+		s.appl = app.New(s.repo, app.Config{})
 	}
 	s.srv, err = openapi.NewServer(s.appl, openapi.Config{
 		APIKeyAdmin: s.cfg.APIKeyAdmin,
