@@ -68,8 +68,8 @@ adapters":
 
 ### Structure of Go packages
 
-- `api/*` - definitions of own and 3rd-party APIs/protocols and related
-  auto-generated code
+- `api/*` - definitions of own and 3rd-party (in `api/ext-*`)
+  APIs/protocols and related auto-generated code
 - `cmd/*` - main application(s)
 - `internal/config` - configuration(s) (default values, env, flags) for
   application(s) subcommands and tests
@@ -182,7 +182,11 @@ $ docker run -i -t --rm ghcr.io/powerman/go-service-example -v
 address-book version 0894daa 2020-09-13_19:44:26 go1.15.2
 $ docker run -i -t --rm \
     -p 8000:8000 \
+    --net=go-service-example_default \
     -e EXAMPLE_APIKEY_ADMIN=secret \
+    -e EXAMPLE_MYSQL_ADDR_HOST=mysql \
+    -e EXAMPLE_MYSQL_AUTH_LOGIN=root \
+    -e EXAMPLE_MYSQL_AUTH_PASS= \
     ghcr.io/powerman/go-service-example
  address-book: inf      main: `started` version 0894daa 2020-09-13_19:44:26
  address-book: inf   openapi: `OpenAPI protocol` version 0.2.0
