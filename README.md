@@ -180,6 +180,8 @@ available networks, then you'll have to restart docker service or reboot.
 ```
 $ docker run -i -t --rm ghcr.io/powerman/go-service-example -v
 address-book version 0894daa 2020-09-13_19:44:26 go1.15.2
+
+$ dc up -d mysql
 $ docker run -i -t --rm \
     -p 8000:8000 \
     --net=go-service-example_default \
