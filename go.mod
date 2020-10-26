@@ -9,7 +9,7 @@ require (
 	github.com/go-openapi/runtime v0.19.23
 	github.com/go-openapi/spec v0.19.10
 	github.com/go-openapi/strfmt v0.19.6
-	github.com/go-openapi/swag v0.19.10
+	github.com/go-openapi/swag v0.19.11
 	github.com/go-openapi/validate v0.19.11
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/mock v1.4.4
