@@ -16,7 +16,7 @@ require (
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/powerman/appcfg v0.5.0
-	github.com/powerman/check v1.2.1
+	github.com/powerman/check v1.3.0
 	github.com/powerman/getenv v0.1.0
 	github.com/powerman/goose/v2 v2.7.0
 	github.com/powerman/must v0.1.0
