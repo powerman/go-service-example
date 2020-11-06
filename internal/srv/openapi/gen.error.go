@@ -2,6 +2,7 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
+
 package openapi
 
 import (
@@ -30,6 +31,7 @@ func errListContacts(log Log, err error, code errCode) op.ListContactsResponder 
 		Message: swag.String(msg),
 	})
 }
+
 
 func errAddContact(log Log, err error, code errCode) op.AddContactResponder {
 	if code.status < http.StatusInternalServerError {
