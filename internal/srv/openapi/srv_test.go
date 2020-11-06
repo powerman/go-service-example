@@ -75,7 +75,8 @@ func TestServeXFF(tt *testing.T) {
 	t.Equal(remoteIP, "1.2.3.4")
 }
 
-func TestServeLogger(t *testing.T) {
+func TestServeLogger(tt *testing.T) {
+	t := check.T(tt)
 	t.Parallel()
 	for _, basePath := range []string{"", "/", "/base/path", "/base/path/"} {
 		basePath := basePath
@@ -187,7 +188,8 @@ func TestServeAccessLog(tt *testing.T) {
 	}
 }
 
-func TestServeSwagger(t *testing.T) {
+func TestServeSwagger(tt *testing.T) {
+	t := check.T(tt)
 	t.Parallel()
 	for _, basePath := range []string{"", "/", "/base/path"} {
 		basePath := basePath

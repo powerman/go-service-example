@@ -3,6 +3,7 @@ module github.com/powerman/go-service-example
 go 1.15
 
 require (
+	github.com/cheekybits/genny v1.0.1-0.20200709201058-3e22f1a88ff2
 	github.com/felixge/httpsnoop v1.0.1
 	github.com/go-openapi/errors v0.19.8
 	github.com/go-openapi/loads v0.19.5
@@ -12,11 +13,15 @@ require (
 	github.com/go-openapi/swag v0.19.11
 	github.com/go-openapi/validate v0.19.12
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/go-swagger/go-swagger v0.25.0
 	github.com/golang/mock v1.4.4
+	github.com/golangci/golangci-lint v1.32.2
 	github.com/jessevdk/go-flags v1.4.0
-	github.com/jmoiron/sqlx v1.2.0
+	github.com/jmoiron/sqlx v1.2.1-0.20190826204134-d7d95172beb5
+	github.com/mattn/goveralls v0.0.7
 	github.com/powerman/appcfg v0.5.0
-	github.com/powerman/check v1.2.1
+	github.com/powerman/check v1.3.0
+	github.com/powerman/dockerize v0.12.0
 	github.com/powerman/getenv v0.1.0
 	github.com/powerman/goose/v2 v2.7.0
 	github.com/powerman/must v0.1.0
@@ -31,4 +36,5 @@ require (
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102
+	gotest.tools/gotestsum v0.6.0
 )
