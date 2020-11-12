@@ -18,13 +18,13 @@ import (
 func TestHealthCheck(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
+	cleanup, c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
 	defer cleanup()
 
-	mockApp.EXPECT().HealthCheck(gomock.Any()).Return(nil, io.EOF)
-	mockApp.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
-	mockApp.EXPECT().HealthCheck(gomock.Any()).Return("OK", nil)
-	mockApp.EXPECT().HealthCheck(gomock.Any()).Return(map[string]string{"main": "OK"}, nil)
+	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, io.EOF)
+	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
+	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return("OK", nil)
+	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(map[string]string{"main": "OK"}, nil)
 
 	testCases := []struct {
 		want    interface{}
@@ -53,7 +53,7 @@ func TestHealthCheck(tt *testing.T) {
 func TestListContacts(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
+	cleanup, c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
 	defer cleanup()
 
 	var (
@@ -63,9 +63,9 @@ func TestListContacts(tt *testing.T) {
 		appPage2 = app.SeekPage{SinceID: 2, Limit: 2}
 	)
 
-	mockApp.EXPECT().Contacts(gomock.Any(), authUser, appPage1).Return(nil, io.EOF)
-	mockApp.EXPECT().Contacts(gomock.Any(), authUser, appPage2).Return(nil, nil)
-	mockApp.EXPECT().Contacts(gomock.Any(), authAdmin, appPage1).Return([]app.Contact{appContact1, appContact2}, nil)
+	mockAppl.EXPECT().Contacts(gomock.Any(), authUser, appPage1).Return(nil, io.EOF)
+	mockAppl.EXPECT().Contacts(gomock.Any(), authUser, appPage2).Return(nil, nil)
+	mockAppl.EXPECT().Contacts(gomock.Any(), authAdmin, appPage1).Return([]app.Contact{appContact1, appContact2}, nil)
 
 	testCases := []struct {
 		apiKey  runtime.ClientAuthInfoWriter
@@ -97,12 +97,12 @@ func TestListContacts(tt *testing.T) {
 func TestAddContact(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockApp, _ := testNewServer(t, openapi.Config{})
+	cleanup, c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
 	defer cleanup()
 
-	mockApp.EXPECT().AddContact(gomock.Any(), authAdmin, " ").Return(nil, io.EOF)
-	mockApp.EXPECT().AddContact(gomock.Any(), authAdmin, "A").Return(nil, app.ErrContactExists)
-	mockApp.EXPECT().AddContact(gomock.Any(), authAdmin, "B").Return(&appContact2, nil)
+	mockAppl.EXPECT().AddContact(gomock.Any(), authAdmin, " ").Return(nil, io.EOF)
+	mockAppl.EXPECT().AddContact(gomock.Any(), authAdmin, "A").Return(nil, app.ErrContactExists)
+	mockAppl.EXPECT().AddContact(gomock.Any(), authAdmin, "B").Return(&appContact2, nil)
 
 	testCases := []struct {
 		apiKey  runtime.ClientAuthInfoWriter
