@@ -6,7 +6,7 @@ require (
 	github.com/cheekybits/genny v1.0.1-0.20200709201058-3e22f1a88ff2
 	github.com/felixge/httpsnoop v1.0.1
 	github.com/go-openapi/errors v0.19.8
-	github.com/go-openapi/loads v0.19.5
+	github.com/go-openapi/loads v0.19.7
 	github.com/go-openapi/runtime v0.19.23
 	github.com/go-openapi/spec v0.19.12
 	github.com/go-openapi/strfmt v0.19.8
