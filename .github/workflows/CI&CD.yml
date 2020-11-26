@@ -14,7 +14,7 @@ env:
 jobs:
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
     timeout-minutes: 30
     services:
       mysql:
@@ -24,13 +24,12 @@ jobs:
         ports:
           - 3306:3306
     env:
-      HADOLINT_VER: '1.18.0'
+      HADOLINT_VER: '1.19.0'
       SHELLCHECK_VER: '0.7.1'
       EXAMPLE_APIKEY_ADMIN: 'admin'
       EXAMPLE_MYSQL_ADDR_HOST: 'localhost'
       EXAMPLE_MYSQL_AUTH_LOGIN: 'root'
       EXAMPLE_MYSQL_AUTH_PASS: ''
-      NARADA4D_TEST_MYSQL: 'goose-mysql://root@127.0.0.1'
     steps:
       - uses: actions/setup-go@v2
         with:
