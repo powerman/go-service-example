@@ -15,11 +15,11 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-swagger/go-swagger v0.25.0
 	github.com/golang/mock v1.4.4
-	github.com/golangci/golangci-lint v1.32.2
+	github.com/golangci/golangci-lint v1.33.0
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.2.1-0.20190826204134-d7d95172beb5
 	github.com/mattn/goveralls v0.0.7
-	github.com/powerman/appcfg v0.5.0
+	github.com/powerman/appcfg v0.6.0
 	github.com/powerman/check v1.3.0
 	github.com/powerman/dockerize v0.13.1
 	github.com/powerman/getenv v0.1.0
