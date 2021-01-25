@@ -8,9 +8,9 @@ require (
 	github.com/go-openapi/errors v0.19.9
 	github.com/go-openapi/loads v0.19.5
 	github.com/go-openapi/runtime v0.19.24
-	github.com/go-openapi/spec v0.19.14
+	github.com/go-openapi/spec v0.20.2
 	github.com/go-openapi/strfmt v0.19.11
-	github.com/go-openapi/swag v0.19.12
+	github.com/go-openapi/swag v0.19.13
 	github.com/go-openapi/validate v0.19.12
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/go-swagger/go-swagger v0.25.0
@@ -35,6 +35,6 @@ require (
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/spf13/cobra v1.1.1
 	github.com/spf13/pflag v1.0.5
-	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b
+	golang.org/x/net v0.0.0-20210119194325-5f4716e94777
 	gotest.tools/gotestsum v0.6.0
 )
