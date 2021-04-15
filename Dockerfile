@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.13.5
 
 LABEL org.opencontainers.image.source="https://github.com/powerman/go-service-example"
 
