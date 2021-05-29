@@ -81,11 +81,12 @@ adapters":
 - `pkg/*` - helper packages, not related to architecture and
   business-logic (may be later moved to own modules and/or replaced by
   external dependencies), e.g.:
-    - `pkg/def/` - project-wide defaults
+  - `pkg/def/` - project-wide defaults
 
 ### Features
 
-- [X] Project structure (mostly) follow [Standard Go Project Layout](https://github.com/golang-standards/project-layout).
+- [X] Project structure (mostly) follows
+  [Standard Go Project Layout](https://github.com/golang-standards/project-layout).
 - [X] Strict but convenient golangci-lint configuration.
 - [X] Easily testable code (thanks to The Clean Architecture).
 - [X] Avoids (and resists to) using global objects (to make it possible to
@@ -95,6 +96,8 @@ adapters":
 - [X] Configuration defaults can be overwritten by env vars and flags.
 - [X] CORS support, so you can play with API using Swagger Editor tool.
 - [X] Example go-swagger authentication and authorization.
+- [X] Example DAL (data access layer):
+  - [X] MySQL 5.6 (strictest SQL mode).
 - [X] Example tests, both unit and integration.
 - [X] Production logging using [structlog](https://github.com/powerman/structlog).
 - [X] Production metrics using Prometheus.
@@ -107,18 +110,9 @@ adapters":
 
 ### Requirements
 
-- Go 1.15
+- Go 1.16
 - [Docker](https://docs.docker.com/install/) 19.03+
 - [Docker Compose](https://docs.docker.com/compose/install/) 1.25+
-- Tools used to build/test project (feel free to install these tools using
-  your OS package manager or any other way, but please ensure they've
-  required versions):
-
-```sh
-GO111MODULE=off go get -u github.com/myitcv/gobin
-curl -sSfL https://github.com/hadolint/hadolint/releases/download/v1.19.0/hadolint-$(uname)-x86_64 | sudo install /dev/stdin /usr/local/bin/hadolint
-curl -sSfL https://github.com/koalaman/shellcheck/releases/download/v0.7.1/shellcheck-v0.7.1.$(uname).x86_64.tar.xz | sudo tar xJf - -C /usr/local/bin --strip-components=1 shellcheck-v0.7.1/shellcheck
-```
 
 ### Setup
 
@@ -137,9 +131,9 @@ convenience only.
 
 - Always load `env.sh` *in every terminal* used to run any project-related
   commands (including `go test`): `source env.sh`.
-    - When `env.sh.dist` change (e.g. by `git pull`) next run of `source
-      env.sh` will fail and remind you to manually update `env.sh` to
-      match current `env.sh.dist`.
+  - When `env.sh.dist` change (e.g. by `git pull`) next run of `source
+    env.sh` will fail and remind you to manually update `env.sh` to match
+    current `env.sh.dist`.
 - `go generate ./...` - do not forget to run after making changes related
   to auto-generated code
 - `go test ./...` - test project (excluding integration tests), fast
@@ -147,9 +141,9 @@ convenience only.
 - `./scripts/test-ci-circle` - run tests locally like CircleCI will do
 - `./scripts/cover` - analyse and show coverage
 - `./scripts/build` - build docker image and binaries in `bin/`
-    - Then use mentioned above `dc` (or `docker-compose`) to run and
-      control the project.
-    - Access project at host/port(s) defined in `env.sh`.
+  - Then use mentioned above `dc` (or `docker-compose`) to run and control
+    the project.
+  - Access project at host/port(s) defined in `env.sh`.
 
 #### Cheatsheet
 

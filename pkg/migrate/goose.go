@@ -22,10 +22,10 @@ import (
 // Ctx is a synonym for convenience.
 type Ctx = context.Context
 
-var errSelfCheck = errors.New("unexpected db schema version")
-
-//nolint:gochecknoglobals // Regexp.
-var reTCP = regexp.MustCompile(`(^|@)tcp[(]([^)]*)[)]`)
+var (
+	errSelfCheck = errors.New("unexpected db schema version")
+	reTCP        = regexp.MustCompile(`(^|@)tcp[(]([^)]*)[)]`)
+)
 
 func connect(ctx Ctx, goose *goosepkg.Instance, cfg *mysql.Config) (db *sql.DB, ver *schemaver.SchemaVer, err error) {
 	log := structlog.FromContext(ctx, nil)

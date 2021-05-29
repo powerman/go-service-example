@@ -38,7 +38,7 @@ func TestContacts(tt *testing.T) {
 	for _, tc := range testsAdd {
 		tc := tc
 		t.Run("", func(tt *testing.T) {
-			t := check.T(tt) //nolint:govet // False positive.
+			t := check.T(tt)
 			res, err := r.AddContact(ctx, tc.name)
 			t.Err(err, tc.wantErr)
 			t.Equal(res, tc.want)

@@ -8,7 +8,7 @@ on:
     branches: master
 
 env:
-  GO_VERSION: '^1.15.2'
+  GO_VERSION: '^1.16'
   GOFLAGS: '-mod=readonly'
 
 jobs:
@@ -22,10 +22,8 @@ jobs:
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         ports:
-          - 3306:3306
+          - '3306:3306'
     env:
-      HADOLINT_VER: '1.19.0'
-      SHELLCHECK_VER: '0.7.1'
       EXAMPLE_APIKEY_ADMIN: 'admin'
       EXAMPLE_MYSQL_ADDR_HOST: 'localhost'
       EXAMPLE_MYSQL_AUTH_LOGIN: 'root'
@@ -37,10 +35,6 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Setup
-        run: |
-          env | grep _VER | sort > /tmp/tools.ver
-
       - uses: actions/cache@v2
         with:
           path: |
@@ -49,26 +43,17 @@ jobs:
             ~/go/src
             ~/.cache/go-build
             ~/.cache/golangci-lint
-            ~/.cache/gobin
             .gobincache
-          key: v2-test-${{ runner.os }}-${{ hashFiles('/tmp/tools.ver') }}-${{ hashFiles('go.mod') }}
+          key: v3-test-${{ runner.os }}-${{ hashFiles('go.mod') }}
           restore-keys: |
-            v2-test-${{ runner.os }}-${{ hashFiles('/tmp/tools.ver') }}-
+            v3-test-${{ runner.os }}-
 
-      - name: Install tools
-        run: |
-          GO111MODULE=off go get -u github.com/myitcv/gobin
-          hadolint --version | tee /dev/stderr | grep -wq v$HADOLINT_VER ||
-            curl -sSfL https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VER}/hadolint-$(uname)-x86_64 | install /dev/stdin $(go env GOPATH)/bin/hadolint
-          shellcheck --version | tee /dev/stderr | grep -wq $SHELLCHECK_VER ||
-            curl -sSfL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VER}/shellcheck-v${SHELLCHECK_VER}.$(uname).x86_64.tar.xz | tar xJf - -C $(go env GOPATH)/bin --strip-components=1 shellcheck-v${SHELLCHECK_VER}/shellcheck
+      - run: scripts/test
 
       - name: Ensure API spec match auto-generated code
         run: |
           go generate ./api/...
           git add . && git status --short && git diff-index --quiet HEAD
-
-      - run: scripts/test
 
       - name: Report code coverage
         env:
@@ -76,7 +61,7 @@ jobs:
         if: env.COVERALLS_TOKEN
         run: |
           scripts/cover
-          gobin -m -run github.com/mattn/goveralls -coverprofile=cover.out -service=GitHub
+          .gobincache/goveralls -coverprofile=cover.out -service=GitHub
 
   build-and-release:
     needs: test

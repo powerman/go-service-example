@@ -5,15 +5,6 @@ setup_env: &setup_env
   run:
     name: Setup environment
     command: |
-      env | sort > /tmp/env.old
-
-      export HADOLINT_VER=1.19.0
-      export SHELLCHECK_VER=0.7.1
-
-      env | sort > /tmp/env.new
-      ! diff -u /tmp/env.old /tmp/env.new | sed -n '/^+[^+]/s/^./export /p' >> $BASH_ENV
-      env | grep _VER | sort > /tmp/tools.ver
-
       test -d ~/.ssh || install -m 0700 -d ~/.ssh
       test -f ~/.ssh/config || install -m 0600 /dev/null ~/.ssh/config
       test -d /run/.ssh && sudo sh -c "cp /run/.ssh/* $HOME/.ssh/; chown -R circleci:circleci $HOME/.ssh" || true # For scripts/test-ci-circle.
@@ -24,7 +15,7 @@ setup_env: &setup_env
 jobs:
   test:
     docker:
-      - image: "cimg/go:1.15"
+      - image: "cimg/go:1.16"
         environment:
           GOFLAGS: "-mod=readonly"
           EXAMPLE_APIKEY_ADMIN: "admin"
@@ -39,38 +30,29 @@ jobs:
       - *setup_env
       - restore_cache:
           keys:
-            - v2-{{ checksum "/tmp/tools.ver" }}-{{ checksum "go.mod" }}-{{ .Branch }}
-            - v2-{{ checksum "/tmp/tools.ver" }}-{{ checksum "go.mod" }}-
-            - v2-{{ checksum "/tmp/tools.ver" }}-
-      - run:
-          name: Install tools
-          command: |
-            GO111MODULE=off go get -u github.com/myitcv/gobin
-            hadolint --version | tee /dev/stderr | grep -wq v$HADOLINT_VER ||
-              curl -sSfL https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VER}/hadolint-$(uname)-x86_64 | install /dev/stdin $(go env GOPATH)/bin/hadolint
-            shellcheck --version | tee /dev/stderr | grep -wq $SHELLCHECK_VER ||
-              curl -sSfL https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VER}/shellcheck-v${SHELLCHECK_VER}.$(uname).x86_64.tar.xz | tar xJf - -C $(go env GOPATH)/bin --strip-components=1 shellcheck-v${SHELLCHECK_VER}/shellcheck
+            - v3-{{ checksum "go.mod" }}-{{ .Branch }}
+            - v3-{{ checksum "go.mod" }}-
+            - v3-
+      - run: scripts/test
       - run:
           name: Ensure API spec match auto-generated code
           command: |
             go generate ./api/...
             git add . && git status --short && git diff-index --quiet HEAD
-      - run: scripts/test
       - run:
           name: Report code coverage
           command: |
             scripts/cover
-            # gobin -m -run github.com/mattn/goveralls -coverprofile=cover.out -service=CircleCI
+            # .gobincache/goveralls -coverprofile=cover.out -service=CircleCI
       - save_cache:
           when: always
-          key: v2-{{ checksum "/tmp/tools.ver" }}-{{ checksum "go.mod" }}-{{ .Branch }}
+          key: v3-{{ checksum "go.mod" }}-{{ .Branch }}
           paths:
             - ~/go/bin/
             - ~/go/pkg/
             - ~/go/src/
             - ~/.cache/go-build/
             - ~/.cache/golangci-lint/
-            - ~/.cache/gobin/
             - .gobincache/
 
 workflows:

@@ -23,7 +23,7 @@ func (srv *server) authenticate(apiKey string) (*app.Auth, error) {
 }
 
 func (srv *server) authorize(r *http.Request, principal interface{}) error {
-	auth := principal.(*app.Auth)
+	auth := principal.(*app.Auth) //nolint:forcetypeassert // Want panic.
 	if r.Method != "GET" && auth.UserID != "admin" {
 		return errRequireAdmin
 	}
