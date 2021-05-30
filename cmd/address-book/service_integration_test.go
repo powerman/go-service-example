@@ -21,7 +21,7 @@ import (
 func TestSmoke(tt *testing.T) {
 	t := check.T(tt)
 
-	s := &service{cfg: cfg}
+	s := &Service{cfg: cfg}
 
 	tempDBCfg, cleanup, err := mysqlx.EnsureTempDB(tLogger(*t), "", cfg.MySQL)
 	cfg.MySQL = tempDBCfg // Assign to cfg and not s.cfg as a reminder: they are the same.
@@ -32,7 +32,7 @@ func TestSmoke(tt *testing.T) {
 	defer cancel()
 	ctxShutdown, shutdown := context.WithCancel(ctx)
 	errc := make(chan error)
-	go func() { errc <- s.runServe(ctxStartup, ctxShutdown, shutdown) }()
+	go func() { errc <- s.RunServe(ctxStartup, ctxShutdown, shutdown) }()
 	defer func() {
 		shutdown()
 		t.Nil(<-errc, "RunServe")
@@ -40,11 +40,11 @@ func TestSmoke(tt *testing.T) {
 			s.repo.Close()
 		}
 	}()
-	t.Must(t.Nil(netx.WaitTCPPort(ctxStartup, cfg.Addr), "connect to service"))
+	t.Must(t.Nil(netx.WaitTCPPort(ctxStartup, cfg.BindAddr), "connect to service"))
 
 	openapiClient := client.NewHTTPClientWithConfig(nil, &client.TransportConfig{
 		Schemes:  []string{"http"},
-		Host:     cfg.Addr.String(),
+		Host:     cfg.BindAddr.String(),
 		BasePath: client.DefaultBasePath,
 	})
 

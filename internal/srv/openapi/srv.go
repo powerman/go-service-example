@@ -15,6 +15,7 @@ import (
 
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/api/openapi/restapi/op"
+	"github.com/powerman/go-service-example/internal/apix"
 	"github.com/powerman/go-service-example/internal/app"
 	"github.com/powerman/go-service-example/pkg/def"
 	"github.com/powerman/go-service-example/pkg/netx"
@@ -92,7 +93,7 @@ func NewServer(appl app.Appl, cfg Config) (*restapi.Server, error) {
 func fromRequest(r *http.Request, auth *app.Auth) (Ctx, Log) {
 	ctx := r.Context()
 	remoteIP, _, _ := net.SplitHostPort(r.RemoteAddr)
-	ctx = def.NewContextWithRemoteIP(ctx, remoteIP)
+	ctx = apix.NewContextWithRemoteIP(ctx, remoteIP)
 	log := structlog.FromContext(ctx, nil)
 	userID := ""
 	if auth != nil {

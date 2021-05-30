@@ -13,8 +13,7 @@ import (
 func TestContact(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, r := newTestRepo(t)
-	defer cleanup()
+	r := newTestRepo(t)
 
 	var (
 		c1 = app.Contact{ID: 1, Name: "A"}

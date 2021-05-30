@@ -18,6 +18,7 @@ require (
 	github.com/golangci/golangci-lint v1.40.1
 	github.com/jessevdk/go-flags v1.4.0
 	github.com/jmoiron/sqlx v1.3.4
+	github.com/lib/pq v1.9.0
 	github.com/mattn/goveralls v0.0.9
 	github.com/powerman/appcfg v0.6.0
 	github.com/powerman/check v1.3.1
@@ -27,6 +28,7 @@ require (
 	github.com/powerman/must v0.1.0
 	github.com/powerman/mysqlx v0.3.3
 	github.com/powerman/narada4d v1.7.1
+	github.com/powerman/sensitive v0.0.6
 	github.com/powerman/sqlxx v0.2.0
 	github.com/powerman/structlog v0.7.1
 	github.com/prometheus/client_golang v1.10.0

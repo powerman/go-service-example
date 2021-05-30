@@ -25,5 +25,5 @@ func TestMain(m *testing.M) {
 func Test(tt *testing.T) {
 	t := check.T(tt)
 	ctx := context.Background()
-	migrate.UpDownTest(t, ctx, migrations.Goose(), ".", cfg.MySQL)
+	migrate.MySQLUpDownTest(t, ctx, migrations.Goose(), ".", cfg.MySQL)
 }

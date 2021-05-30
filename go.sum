@@ -838,6 +838,8 @@ github.com/powerman/mysqlx v0.3.3/go.mod h1:ZSl17PWU2DgwM2KjN8OrdAq9tYC5p4Xm3lTN
 github.com/powerman/narada4d v1.7.1 h1:G6hkEQxfCBWIsrUtB4MyWq4c84qcS/3XsBQLWUuUyik=
 github.com/powerman/narada4d v1.7.1/go.mod h1:LUOXFkHgtSwPqtrZx+F/Ab1PqOiL96O3GfYnoKfg6T0=
 github.com/powerman/pqx v0.6.1/go.mod h1:EJGFN0+vvTWFqwT1bTrnVWrJ8hO7RAW6rp2JVhYwrVE=
+github.com/powerman/sensitive v0.0.6 h1:cLE/om0/J2mpiI/Z6o1r9AUbs8Q7G1vhISEbdGeIGQc=
+github.com/powerman/sensitive v0.0.6/go.mod h1:BT3bBXUqTDKM13MXlYvN4Csg9WXSZblJ12mGgHAY/wU=
 github.com/powerman/sqlxx v0.2.0 h1:NA2Z+o7Q6Lu9UqwGFqqPePKWoPYZ5doOsBnfstCU1uU=
 github.com/powerman/sqlxx v0.2.0/go.mod h1:dsfudBeSTo0U61OEAC/WS0Ea7qityww7jvFvWt3U1Fw=
 github.com/powerman/structlog v0.7.1 h1:68xN/GdxU7SYbXu/7P4RWyK7lKaN7FXjncarf7wO+Wk=

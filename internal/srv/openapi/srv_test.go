@@ -17,6 +17,7 @@ import (
 
 	"github.com/powerman/go-service-example/api/openapi/restapi"
 	"github.com/powerman/go-service-example/api/openapi/restapi/op"
+	"github.com/powerman/go-service-example/internal/apix"
 	"github.com/powerman/go-service-example/internal/srv/openapi"
 	"github.com/powerman/go-service-example/pkg/def"
 )
@@ -43,8 +44,7 @@ func fetch(t *check.C, url string, headers ...string) *http.Response {
 func TestServeNoCache(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, _, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	_, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
 
@@ -58,12 +58,11 @@ func TestServeNoCache(tt *testing.T) {
 func TestServeXFF(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, _, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	_, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	var remoteIP string
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).DoAndReturn(func(ctx Ctx) (interface{}, error) {
-		remoteIP = def.FromContext(ctx)
+		remoteIP = apix.FromContext(ctx)
 		return nil, nil
 	}).Times(2)
 
@@ -83,8 +82,7 @@ func TestServeLogger(tt *testing.T) {
 		t.Run("BasePath="+basePath, func(tt *testing.T) {
 			t := check.T(tt)
 			t.Parallel()
-			cleanup, _, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{BasePath: basePath})
-			defer cleanup()
+			_, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{BasePath: basePath})
 
 			var log *structlog.Logger
 			mockAppl.EXPECT().HealthCheck(gomock.Any()).DoAndReturn(func(ctx Ctx) (interface{}, error) {
@@ -98,7 +96,7 @@ func TestServeLogger(tt *testing.T) {
 			var buf bytes.Buffer
 			log.SetOutput(&buf)
 			log.Info("test")
-			t.Match(buf.String(), ": 127.0.0.1:\\d+ +GET +"+healthCheckEndpoint+": `test`")
+			t.Match(buf.String(), ": 127.0.0.1 +GET +"+healthCheckEndpoint+": `test`")
 		})
 	}
 }
@@ -106,8 +104,7 @@ func TestServeLogger(tt *testing.T) {
 func TestServeRecover(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, _, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	_, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).DoAndReturn(func(ctx Ctx) (interface{}, error) {
 		panic("boom")
@@ -120,8 +117,7 @@ func TestServeRecover(tt *testing.T) {
 func TestServeRecoverNetError(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, _, tsURL, mockAppl, logc := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	_, tsURL, mockAppl, logc := testNewServer(t, openapi.Config{})
 
 	c := &http.Client{}
 	ctx, cancel := context.WithTimeout(context.Background(), def.TestTimeout)
@@ -151,8 +147,7 @@ func TestServeRecoverNetError(tt *testing.T) {
 func TestServeAccessLog(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, _, tsURL, mockAppl, logc := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	_, tsURL, mockAppl, logc := testNewServer(t, openapi.Config{})
 	reAccessLog := regexp.MustCompile("`handled`|`failed to handle`|`panic`")
 
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
@@ -196,8 +191,7 @@ func TestServeSwagger(tt *testing.T) {
 		t.Run("BasePath="+basePath, func(tt *testing.T) {
 			t := check.T(tt)
 			t.Parallel()
-			cleanup, _, tsURL, _, _ := testNewServer(t, openapi.Config{BasePath: basePath})
-			defer cleanup()
+			_, tsURL, _, _ := testNewServer(t, openapi.Config{BasePath: basePath})
 
 			swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 			t.Nil(err)
@@ -228,8 +222,7 @@ func TestServeSwagger(tt *testing.T) {
 func TestServeCORS(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, _, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	_, tsURL, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
 

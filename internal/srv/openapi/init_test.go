@@ -48,7 +48,7 @@ var (
 	apiContact2  = &model.Contact{ID: 2, Name: swag.String("B")}
 )
 
-func testNewServer(t *check.C, cfg openapi.Config) (cleanup func(), c *client.AddressBook, url string, mockAppl *app.MockAppl, logc <-chan string) {
+func testNewServer(t *check.C, cfg openapi.Config) (c *client.AddressBook, url string, mockAppl *app.MockAppl, logc <-chan string) {
 	cfg.Addr = netx.NewAddr("localhost", 0)
 	cfg.APIKeyAdmin = "admin"
 
@@ -78,13 +78,12 @@ func testNewServer(t *check.C, cfg openapi.Config) (cleanup func(), c *client.Ad
 	errc := make(chan error, 1)
 	go func() { errc <- server.Serve() }()
 
-	cleanup = func() {
+	t.Cleanup(func() {
 		t.Helper()
 		t.Nil(server.Shutdown(), "server.Shutdown")
 		t.Nil(<-errc, "server.Serve")
 		pipew.Close()
-		ctrl.Finish()
-	}
+	})
 
 	ln, err := server.HTTPListener()
 	t.Must(t.Nil(err, "server.HTTPListener"))
@@ -104,7 +103,7 @@ func testNewServer(t *check.C, cfg openapi.Config) (cleanup func(), c *client.Ad
 	t.Must(t.Nil(err, "connect to service"))
 	<-logch
 
-	return cleanup, c, url, mockAppl, logch
+	return c, url, mockAppl, logch
 }
 
 func interceptLog(out io.Writer, next http.Handler) http.Handler {

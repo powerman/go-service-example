@@ -25,14 +25,14 @@ type Ctx = context.Context
 
 var reg = prometheus.NewPedanticRegistry() //nolint:gochecknoglobals // Metrics are global anyway.
 
-type service struct {
+type Service struct {
 	cfg  *config.ServeConfig
 	repo *dal.Repo
 	appl *app.App
 	srv  *restapi.Server
 }
 
-func initService(cmd, serveCmd *cobra.Command) error {
+func (s *Service) Init(cmd, serveCmd *cobra.Command) error {
 	namespace := regexp.MustCompile(`[^a-zA-Z0-9]+`).ReplaceAllString(def.ProgName, "_")
 	initMetrics(reg, namespace)
 	dal.InitMetrics(reg, namespace)
@@ -48,7 +48,7 @@ func initService(cmd, serveCmd *cobra.Command) error {
 	})
 }
 
-func (s *service) runServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err error) {
+func (s *Service) RunServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err error) {
 	log := structlog.FromContext(ctxShutdown, nil)
 	if s.cfg == nil {
 		s.cfg, err = config.GetServe()
@@ -69,7 +69,7 @@ func (s *service) runServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err er
 	}
 	s.srv, err = openapi.NewServer(s.appl, openapi.Config{
 		APIKeyAdmin: s.cfg.APIKeyAdmin,
-		Addr:        s.cfg.Addr,
+		Addr:        s.cfg.BindAddr,
 	})
 	if err != nil {
 		return log.Err("failed to openapi.NewServer", "err", err)
@@ -85,14 +85,14 @@ func (s *service) runServe(ctxStartup, ctxShutdown Ctx, shutdown func()) (err er
 	return nil
 }
 
-func (s *service) connectRepo(ctx Ctx) (interface{}, error) {
-	return dal.New(ctx, s.cfg.MySQLGooseDir, s.cfg.MySQL)
+func (s *Service) connectRepo(ctx Ctx) (interface{}, error) {
+	return dal.New(ctx, s.cfg.GooseMySQLDir, s.cfg.MySQL)
 }
 
-func (s *service) serveMetrics(ctx Ctx) error {
-	return serve.Metrics(ctx, s.cfg.MetricsAddr, reg)
+func (s *Service) serveMetrics(ctx Ctx) error {
+	return serve.Metrics(ctx, s.cfg.BindMetricsAddr, reg)
 }
 
-func (s *service) serveOpenAPI(ctx Ctx) error {
+func (s *Service) serveOpenAPI(ctx Ctx) error {
 	return serve.OpenAPI(ctx, s.srv, "OpenAPI")
 }

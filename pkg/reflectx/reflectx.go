@@ -28,3 +28,11 @@ func CallerMethodName(skip int) string {
 	names := strings.Split(runtime.FuncForPC(pc).Name(), ".")
 	return names[len(names)-1]
 }
+
+// CallerPkg returns caller's package name (from path) for given stack depth.
+func CallerPkg(skip int) string {
+	pc, _, _, _ := runtime.Caller(1 + skip)
+	names := strings.Split(runtime.FuncForPC(pc).Name(), "/")
+	pkg := names[len(names)-1]
+	return pkg[:strings.Index(pkg, ".")]
+}

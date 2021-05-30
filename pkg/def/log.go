@@ -7,7 +7,7 @@ import (
 // Log field names.
 const (
 	LogServer     = "server"     // "OpenAPI", "gRPC", "Prometheus metrics", etc.
-	LogRemote     = "remote"     // Aligned IPv4:Port "   192.168.0.42:1234 ".
+	LogRemoteIP   = "remoteIP"   // IP address.
 	LogAddr       = "addr"       // host:port.
 	LogHost       = "host"       // DNS hostname or IPv4/IPv6 address.
 	LogPort       = "port"       // TCP/UDP port number.
@@ -20,7 +20,7 @@ const (
 func setupLog() {
 	structlog.DefaultLogger.
 		AppendPrefixKeys(
-			LogRemote,
+			LogRemoteIP,
 			LogHTTPStatus,
 			LogHTTPMethod,
 			LogFunc,
@@ -28,6 +28,7 @@ func setupLog() {
 		SetSuffixKeys(
 			LogServer,
 			LogUserID,
+			"dump",
 			structlog.KeyStack,
 		).
 		SetDefaultKeyvals(
@@ -36,7 +37,7 @@ func setupLog() {
 		SetKeysFormat(map[string]string{
 			structlog.KeyApp:  " %12.12[2]s:", // set to max microservice name length
 			structlog.KeyUnit: " %9.9[2]s:",   // set to max KeyUnit/package length
-			LogRemote:         " %-21[2]s",
+			LogRemoteIP:       " %-15[2]s",    // set to 19.19 or 39 or 45 for IPv6
 			LogHTTPStatus:     " %3[2]v",
 			LogHTTPMethod:     " %-7[2]s",
 			LogFunc:           " %[2]s:",
@@ -45,8 +46,9 @@ func setupLog() {
 			LogAddr:           " %[2]s",
 			"version":         " %s %v",
 			"json":            " %s=%#q",
-			"ptr":             " %[2]p",   // for debugging references
-			"data":            " %#+[2]v", // for debugging structs
+			"ptr":             " %[2]p",            // for debugging references
+			"data":            " %#+[2]v",          // for debugging structs
+			"dump":            "\n›››\n%[2]s\n‹‹‹", // for debugging multiline text
 			"offset":          " page=%3[2]d",
 			"limit":           "+%[2]d ",
 			"err":             " %s: %v",

@@ -20,7 +20,7 @@ import (
 
 //nolint:gochecknoglobals // Main.
 var (
-	svc = &service{}
+	svc = &Service{}
 
 	log = structlog.New(structlog.KeyUnit, "main")
 
@@ -45,12 +45,13 @@ var (
 )
 
 func main() {
+	_ = os.Unsetenv("GO_TEST_DISABLE_SENSITIVE")
 	err := def.Init()
 	if err != nil {
 		log.Fatalf("failed to get defaults: %s", err)
 	}
 
-	err = initService(rootCmd, serveCmd)
+	err = svc.Init(rootCmd, serveCmd)
 	if err != nil {
 		log.Fatalf("failed to init service: %s", err)
 	}
@@ -77,9 +78,7 @@ func runServeWithGracefulShutdown(_ *cobra.Command, _ []string) error {
 	defer cancel()
 
 	ctxShutdown, shutdown := context.WithCancel(context.Background())
-	sigc := make(chan os.Signal, 1)
-	signal.Notify(sigc, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGABRT, syscall.SIGTERM)
-	go func() { <-sigc; shutdown() }()
+	ctxShutdown, _ = signal.NotifyContext(ctxShutdown, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGABRT, syscall.SIGTERM)
 	go func() {
 		<-ctxShutdown.Done()
 		time.Sleep(serveShutdownTimeout.Value(nil))
@@ -87,5 +86,5 @@ func runServeWithGracefulShutdown(_ *cobra.Command, _ []string) error {
 		os.Exit(1)
 	}()
 
-	return svc.runServe(ctxStartup, ctxShutdown, shutdown)
+	return svc.RunServe(ctxStartup, ctxShutdown, shutdown)
 }

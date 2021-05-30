@@ -34,7 +34,7 @@ var all = &struct { //nolint:gochecknoglobals // Config is global anyway.
 	MySQLAuthLogin  appcfg.NotEmptyString `env:"MYSQL_AUTH_LOGIN"`
 	MySQLAuthPass   appcfg.String         `env:"MYSQL_AUTH_PASS"`
 	MySQLDBName     appcfg.NotEmptyString `env:"MYSQL_DB"`
-	MySQLGooseDir   appcfg.NotEmptyString
+	GooseMySQLDir   appcfg.NotEmptyString
 }{ // Defaults, if any:
 	AddrHost:        appcfg.MustNotEmptyString(def.Hostname),
 	AddrPort:        appcfg.MustPort("8000"),
@@ -42,7 +42,7 @@ var all = &struct { //nolint:gochecknoglobals // Config is global anyway.
 	MySQLAddrPort:   appcfg.MustPort("3306"),
 	MySQLAuthLogin:  appcfg.MustNotEmptyString(def.ProgName),
 	MySQLDBName:     appcfg.MustNotEmptyString(def.ProgName),
-	MySQLGooseDir:   appcfg.MustNotEmptyString("internal/migrations/mysql"),
+	GooseMySQLDir:   appcfg.MustNotEmptyString("internal/migrations/mysql"),
 }
 
 // FlagSets for all CLI subcommands which use flags to set config values.
@@ -65,31 +65,31 @@ func Init(flagsets FlagSets) error {
 		return err
 	}
 
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAddrHost, "mysql.host", "host to connect to MySQL")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAddrPort, "mysql.port", "port to connect to MySQL")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLDBName, "mysql.dbname", "MySQL database name")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAuthLogin, "mysql.user", "MySQL username")
+	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAuthPass, "mysql.pass", "MySQL password")
+
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAddrHost, "mysql.host", "host to connect to MySQL")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAddrPort, "mysql.port", "port to connect to MySQL")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLDBName, "mysql.dbname", "MySQL database name")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAuthLogin, "mysql.user", "MySQL username")
+	appcfg.AddPFlag(fs.Serve, &all.MySQLAuthPass, "mysql.pass", "MySQL password")
 	appcfg.AddPFlag(fs.Serve, &all.AddrHost, "host", "host to serve OpenAPI")
 	appcfg.AddPFlag(fs.Serve, &all.AddrPort, "port", "port to serve OpenAPI")
 	appcfg.AddPFlag(fs.Serve, &all.MetricsAddrPort, "metrics.port", "port to serve Prometheus metrics")
-	appcfg.AddPFlag(fs.Serve, &all.MySQLAddrHost, "mysql.host", "host to connect to MySQL")
-	appcfg.AddPFlag(fs.Serve, &all.MySQLAddrPort, "mysql.port", "port to connect to MySQL")
-	appcfg.AddPFlag(fs.Serve, &all.MySQLAuthLogin, "mysql.user", "MySQL username")
-	appcfg.AddPFlag(fs.Serve, &all.MySQLAuthPass, "mysql.pass", "MySQL password")
-	appcfg.AddPFlag(fs.Serve, &all.MySQLDBName, "mysql.dbname", "MySQL database name")
-
-	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAddrHost, "mysql.host", "host to connect to MySQL")
-	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAddrPort, "mysql.port", "port to connect to MySQL")
-	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAuthLogin, "mysql.user", "MySQL username")
-	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLAuthPass, "mysql.pass", "MySQL password")
-	appcfg.AddPFlag(fs.GooseMySQL, &all.MySQLDBName, "mysql.dbname", "MySQL database name")
 
 	return nil
 }
 
 // ServeConfig contains configuration for subcommand.
 type ServeConfig struct {
-	MySQL         *mysql.Config
-	MySQLGooseDir string
-	Addr          netx.Addr
-	MetricsAddr   netx.Addr
-	APIKeyAdmin   string
+	MySQL           *mysql.Config
+	GooseMySQLDir   string
+	BindAddr        netx.Addr
+	BindMetricsAddr netx.Addr
+	APIKeyAdmin     string
 }
 
 // GetServe validates and returns configuration for subcommand.
@@ -98,15 +98,15 @@ func GetServe() (c *ServeConfig, err error) {
 
 	c = &ServeConfig{
 		MySQL: def.NewMySQLConfig(def.MySQLConfig{
-			Addr: netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
-			User: all.MySQLAuthLogin.Value(&err),
-			Pass: all.MySQLAuthPass.Value(&err),
-			DB:   all.MySQLDBName.Value(&err),
+			Addr:   netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
+			DBName: all.MySQLDBName.Value(&err),
+			User:   all.MySQLAuthLogin.Value(&err),
+			Pass:   all.MySQLAuthPass.Value(&err),
 		}),
-		MySQLGooseDir: all.MySQLGooseDir.Value(&err),
-		Addr:          netx.NewAddr(all.AddrHost.Value(&err), all.AddrPort.Value(&err)),
-		MetricsAddr:   netx.NewAddr(all.AddrHost.Value(&err), all.MetricsAddrPort.Value(&err)),
-		APIKeyAdmin:   all.APIKeyAdmin.Value(&err),
+		GooseMySQLDir:   all.GooseMySQLDir.Value(&err),
+		BindAddr:        netx.NewAddr(all.AddrHost.Value(&err), all.AddrPort.Value(&err)),
+		BindMetricsAddr: netx.NewAddr(all.AddrHost.Value(&err), all.MetricsAddrPort.Value(&err)),
+		APIKeyAdmin:     all.APIKeyAdmin.Value(&err),
 	}
 	if err != nil {
 		return nil, appcfg.WrapPErr(err, fs.Serve, all)
@@ -119,12 +119,12 @@ func GetGooseMySQL() (c *cobrax.GooseMySQLConfig, err error) {
 
 	c = &cobrax.GooseMySQLConfig{
 		MySQL: def.NewMySQLConfig(def.MySQLConfig{
-			Addr: netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
-			User: all.MySQLAuthLogin.Value(&err),
-			Pass: all.MySQLAuthPass.Value(&err),
-			DB:   all.MySQLDBName.Value(&err),
+			Addr:   netx.NewAddr(all.MySQLAddrHost.Value(&err), all.MySQLAddrPort.Value(&err)),
+			DBName: all.MySQLDBName.Value(&err),
+			User:   all.MySQLAuthLogin.Value(&err),
+			Pass:   all.MySQLAuthPass.Value(&err),
 		}),
-		MySQLGooseDir: all.MySQLGooseDir.Value(&err),
+		GooseMySQLDir: all.GooseMySQLDir.Value(&err),
 	}
 	if err != nil {
 		return nil, appcfg.WrapPErr(err, fs.GooseMySQL, all)

@@ -8,10 +8,10 @@ import (
 
 // MySQLConfig contains MySQL connection and authentication details.
 type MySQLConfig struct {
-	Addr netx.Addr
-	User string
-	Pass string
-	DB   string
+	Addr   netx.Addr
+	DBName string
+	User   string
+	Pass   string
 }
 
 // NewMySQLConfig creates a new default config for MySQL.
@@ -21,7 +21,7 @@ func NewMySQLConfig(cfg MySQLConfig) *mysql.Config {
 	c.Passwd = cfg.Pass
 	c.Net = "tcp"
 	c.Addr = cfg.Addr.String()
-	c.DBName = cfg.DB
+	c.DBName = cfg.DBName
 	c.Params = map[string]string{
 		"sql_mode": "'TRADITIONAL'", // 5.6 defaults + all strict modes.
 	}

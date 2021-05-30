@@ -18,8 +18,7 @@ import (
 func TestHealthCheck(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, io.EOF)
 	mockAppl.EXPECT().HealthCheck(gomock.Any()).Return(nil, nil)
@@ -53,8 +52,7 @@ func TestHealthCheck(tt *testing.T) {
 func TestListContacts(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	var (
 		apiPage1 = model.SeekPagination{SinceID: swag.Int32(0), Limit: swag.Int32(2)}
@@ -97,8 +95,7 @@ func TestListContacts(tt *testing.T) {
 func TestAddContact(tt *testing.T) {
 	t := check.T(tt)
 	t.Parallel()
-	cleanup, c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
-	defer cleanup()
+	c, _, mockAppl, _ := testNewServer(t, openapi.Config{})
 
 	mockAppl.EXPECT().AddContact(gomock.Any(), authAdmin, " ").Return(nil, io.EOF)
 	mockAppl.EXPECT().AddContact(gomock.Any(), authAdmin, "A").Return(nil, app.ErrContactExists)

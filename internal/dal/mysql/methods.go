@@ -11,7 +11,7 @@ func (r *Repo) AddContact(ctx Ctx, name string) (id int, err error) {
 			Name: name,
 		})
 		switch {
-		case repo.DuplicateEntry(err):
+		case repo.MySQLDuplicateEntry(err):
 			return app.ErrContactExists
 		case err != nil:
 			return err

@@ -37,8 +37,9 @@ func makeLogger(basePath string) middlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			log := structlog.FromContext(r.Context(), nil)
+			remoteIP, _, _ := net.SplitHostPort(r.RemoteAddr)
 			log.SetDefaultKeyvals(
-				def.LogRemote, r.RemoteAddr,
+				def.LogRemoteIP, remoteIP,
 				def.LogHTTPStatus, "",
 				def.LogHTTPMethod, r.Method,
 				def.LogFunc, path.Join("/", strings.TrimPrefix(r.URL.Path, basePath)),

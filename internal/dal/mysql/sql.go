@@ -6,14 +6,15 @@ import (
 
 const (
 	sqlContactAdd = `
-INSERT INTO Contact (name) VALUES (:name)
+ INSERT INTO Contact (name)
+ VALUES (:name)
 	`
 	sqlContactLst = `
-SELECT id, name, ctime
-FROM Contact
-WHERE id > :since_id
-ORDER BY id ASC
-LIMIT :limit
+ SELECT id, name, ctime
+   FROM Contact
+  WHERE id > :since_id
+  ORDER BY id ASC
+  LIMIT :limit
 	`
 )
 
